@@ -135,15 +135,12 @@ class Voting(models.Model):
         # Comprobación número columnas
         if len(file.columns)!=7:
             raise AssertionError('El número de columnas del archivo no concuerda con el esperado')
-
         # Comprobación nombres de columnas
         if (columns_names!=file.columns).all():
             raise AssertionError('Los nombres de las columnas deben ser ' + str(columns_names))
-        
         # Comprobación provincias
         if len(df["Provincia"].unique())!= 52:
             raise AssertionError('Faltan provincias con candidatos')
-
         for row in df.iterrows():
             # Comprobación proceso primarias
             if str(row[1][6]) != "Sí":
@@ -155,7 +152,6 @@ class Voting(models.Model):
         for key, item in df2:
             if len(item) != 6 :
                 raise AssertionError('Las siguientes candidaturas no cumplen con los 6 candidatos obligatorios:\n' + str(df2.get_group(key)))
-
         # Comprobación relación 1/2
         df3 = df.groupby(['Provincia', 'Partido Político', 'Sexo'])
         for key, item in df3:
