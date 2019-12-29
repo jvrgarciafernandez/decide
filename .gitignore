@@ -106,3 +106,4 @@ ENV/
 .vagrant
 .vscode/
 decide/.vscode
+*_copy
