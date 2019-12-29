@@ -150,11 +150,10 @@ class Voting(models.Model):
                 raise AssertionError('El candidato con nombre ' + str(row[1][0]) + ' ' + str(row[1][1]) +
             ' ' + str(row[1][2]) + ' perteneciente a la provincia ' + str(row[1][4]) + ' del partido ' +
             str(row[1][5]) + ' no ha pasado por un proceso de primarias.')
-        
         # Comprobación 6 candidatos/provincia/partido político
         df2 = df.groupby(['Provincia', 'Partido Político'])
         for key, item in df2:
-            if len(df2.get_group(key)) != 6 :
+            if len(item) != 6 :
                 raise AssertionError('Las siguientes candidaturas no cumplen con los 6 candidatos obligatorios:\n' + str(df2.get_group(key)))
 
         # Comprobación relación 1/2
