@@ -47,6 +47,9 @@ INSTALLED_APPS = [
 
     # Apps needed fod SocialAuth branch
     'django.contrib.sites',
+    # This apps we will need for allauth apirest responses
+    'rest_auth',
+    'rest_auth.registration',
 
     'allauth',
     'allauth.account',

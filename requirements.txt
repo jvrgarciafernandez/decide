@@ -12,4 +12,4 @@ jsonnet==0.12.1
 
 #Modules needed for SocialAuth branch
 django-allauth #Necesario para el nuevo despliegue
-django-bootstrap-form
+django-rest-auth==0.9.5

@@ -3,17 +3,8 @@
 {% get_providers as socialaccount_providers %}
 
 {% for provider in socialaccount_providers %}
-{% if provider.id == "openid" %}
-{% for brand in provider.get_brands %}
-{% comment %} <li>
-  <a title="{{brand.name}}" class="socialaccount_provider {{provider.id}} {{brand.id}}"
-    href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">{{brand.name}}</a>
-</li> {% endcomment %}
-{% endfor %}
-{% endif %}
 <span>
-  <a title="{{provider.name}}"
-    href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
+  <a title="{{provider.name}}" href="{% provider_login_url provider.id openid=brand.openid_url process=process %}">
     <span class="fab fa-{{provider.id}}-square"></span>
   </a>
 </span>
