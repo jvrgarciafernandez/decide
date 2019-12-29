@@ -109,16 +109,49 @@
     </script>
 
     <script>
+        function setCookie(cookieName, cookieValue, expiresDays) {
+            var today = new Date();
+            today.setTime(today.getTime() + (expiresDays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + today.toGMTString();
+            document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cookieName) {
+            var name = cookieName + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookies = decodedCookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var c = cookies[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            var activatedTheme = getCookie("theme");
+
+            if (activatedTheme == "dark") {
+                activateDarkMode();
+            }
+        }
+
         function activateDarkMode() {
             document.body.style.background = "#060d14";
             document.getElementById("divId1").style.color = "#ffffff";
             document.getElementById("tableVoting").style.color = "#ffffff";
+            setCookie("theme", "dark", 365);
         }
 
         function activateLightMode() {
             document.body.style.background = "#ffffff";
             document.getElementById("divId1").style.color = "#212529";
             document.getElementById("tableVoting").style.color = "#212529";
+            setCookie("theme", "light", 365);
         }
     </script>
 </body>

@@ -5,7 +5,7 @@
         <title>{% block title %}Decide!{% endblock %}</title>
         {% block extrahead %}{% endblock %}
     </head>
-    <body>
+    <body onload="checkCookie()">
         {% block content %}
         {% endblock %}
 
