@@ -153,6 +153,8 @@
             document.getElementById("tableVoting").style.color = "#212529";
             setCookie("theme", "light", 365);
         }
+
+        window.onload = checkCookie();
     </script>
 </body>
 {% endblock %}
