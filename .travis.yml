@@ -1,21 +1,69 @@
+############################################################
+## Variables:                                              #
+##                                                         #
+## DEPLOY_TRAVIS ------> 1 para activar releases           #
+## USER_TRAVIS --------> usuario de github                 #
+## EMAIL_TRAVIS -------> email de github                   #
+## MILESTONE_TRAVIS ---> número de milestone               #
+## NOMBRE_ZIP ---------> decide-dialga                     #
+## RAMA_TRAVIS --------> master                            #
+## TOKEN_TRAVIS -------> token github.com/settings/tokens  #
+## HEROKU_APP_NAME ----> nombre de la app en heroku        #
+## HEROKU_API_KEY -----> api key de heroku del usuario     #
+############################################################
+
 dist: xenial
+
+sudo: required
 
 services:
   - postgresql
+
 addons:
   postgresql: "9.4"
+
 before_script:
   - psql -U postgres -c "create user decide password 'decide'"
   - psql -U postgres -c "create database test_decide owner decide"
   - psql -U postgres -c "ALTER USER decide CREATEDB"
+
 language: python
+
 python:
   - "3.6"
+env:
+  - DJANGO_SETTINGS_MODULE="decide.settings"
+
 install:
   - pip install -r requirements.txt
   - pip install codacy-coverage
+  - pip install flake8
+
 script:
   - cd decide
   - coverage run --branch --source=. ./manage.py test --keepdb --with-xunit
   - coverage xml
   - python-codacy-coverage -r coverage.xml
+  - flake8 --select E501,E265 . --exit-zero
+  - if [[ $TRAVIS_BRANCH == $RAMA_TRAVIS ]] && [[ $DEPLOY_TRAVIS == "1" ]]; then git archive --format zip --output ./$NOMBRE_ZIP.zip $RAMA_TRAVIS; echo "Zip generado correctamente."; fi
+
+before_deploy:
+  - git config --local user.name $USER_TRAVIS
+  - git config --local user.email $EMAIL_TRAVIS
+  - export YEAR=`date +"%Y"`  
+  - export GIT_TAG=M$MILESTONE_TRAVIS-build.$TRAVIS_BUILD_NUMBER-$YEAR
+  - git tag -a $GIT_TAG -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
+
+deploy:
+  provider: releases
+  api-key:
+    secure: $TOKEN_TRAVIS
+  file: "./$NOMBRE_ZIP.zip"
+  skip_cleanup: true
+  on:
+    branch: $RAMA_TRAVIS
+    condition: $DEPLOY_TRAVIS = 1
+    tags: false
+
+notifications:
+  email: false
