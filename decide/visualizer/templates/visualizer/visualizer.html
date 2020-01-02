@@ -125,23 +125,23 @@
                  <div class="card card-shadow-2 bg-white mt-4">
                     <div class="card-body">
                        <h6 class="card-title text-muted">Nº DE VOTOS</h6>
-                       <h3 class="card-text text-center mb-3">999</h3>
+                       <h3 id="total_votes" class="card-text text-center mb-3">0</h3>
                     </div>
                  </div>
               </div>
+              <div class="col-sm">
+               <div class="card card-shadow-2 bg-white mt-4">
+                  <div class="card-body">
+                   <h6 class="card-title text-muted">COMIENZO</h6>
+                   <h3 id="start_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
+                  </div>
+               </div>
+            </div>
               <div class="col-sm">
                  <div class="card card-shadow-2 bg-white mt-4">
                     <div class="card-body">
                        <h6 class="card-title text-muted">FINALIZACIÓN</h6>
-                       <h4 class="card-text text-center mb-3">[[ voting.end_date ]]</h4>
-                    </div>
-                 </div>
-              </div>
-              <div class="col-sm">
-                 <div class="card card-shadow-2 bg-white mt-4">
-                    <div class="card-body">
-                       <h5 class="card-title text-muted">DATA 4</h5>
-                       <h3 class="card-text text-center mb-3">3M</h3>
+                       <h3 id="end_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
                     </div>
                  </div>
               </div>
@@ -261,6 +261,7 @@
     <script>
         document.getElementsByTagName("body")[0].className = "bg-light";
         
+        
         $(function () {
             $('[data-toggle="popover"]').popover()
         })
@@ -275,8 +276,22 @@
             }
         });
 
+        function getTotalVotes(){
+           var res = 0
+           for (var i = 0; i < voting.postproc.length; i++) {
+              res += voting.postproc[i]["votes"]
+           }
+           return res;
+        }
+
+        voting.end_date = new Date(voting.end_date);
+        voting.start_date = new Date(voting.start_date);
+        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getMinutes()+" "+voting.start_date.getDate()+"/"+(voting.start_date.getMonth()+1)+"/"+voting.start_date.getFullYear();
+        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getMinutes()+" "+voting.end_date.getDate()+"/"+(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
+        document.getElementById("total_votes").innerText = getTotalVotes();
         //console.log(voting);
 
+       
         let question = voting.name;
         let labels = [];
         let datas = [];
