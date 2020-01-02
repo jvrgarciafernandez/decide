@@ -15,6 +15,10 @@ from mixnet.mixcrypt import MixCrypt
 from mixnet.models import Auth
 from voting.models import Voting, Question, QuestionOption
 
+import os
+import pandas as pd
+import openpyxl
+
 
 class VotingTestCase(BaseTestCase):
 
@@ -208,3 +212,33 @@ class VotingTestCase(BaseTestCase):
         response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already tallied')
+
+    def test_check_inputFile(self):
+
+        THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
+        filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado.xlsx'
+        # my_file = os.path.join(THIS_FOLDER + '/docs/CandidatesFiles/', 'Candidatos_Senado.xlsx')
+        
+        # Test positivo
+        Voting.checkInputFile(filePath)
+
+        # Test negativo. Un candidato no ha pasado por el proceso de primarias
+        filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado2.xlsx'
+        try:
+            Voting.checkInputFile(filePath)
+        except:
+            print('Test negativo de proceso de primarias correcto')
+        
+        # Test negativo. Faltan provincias con candidatos
+        filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado3.xlsx'
+        try:
+            Voting.checkInputFile(filePath)
+        except:
+            print('Test negativo de provincias correcto')
+        
+        # Test negativo. No hay 6 candidatos/provincia/partido político ni relación 1/2 entre hombres y mujeres
+        filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado4.xlsx'
+        try:
+            Voting.checkInputFile(filePath)
+        except:
+            print('Test negativo de 6 candidatos/provincia/partido político y relación 1/2 correcto')
