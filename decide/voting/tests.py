@@ -16,8 +16,6 @@ from mixnet.models import Auth
 from voting.models import Voting, Question, QuestionOption
 
 import os
-import pandas as pd
-import openpyxl
 
 
 class VotingTestCase(BaseTestCase):
