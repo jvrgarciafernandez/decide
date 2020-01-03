@@ -47,17 +47,19 @@
         <!-- Navbar -->
         <b-navbar type="dark" variant="secondary">
             <b-navbar-brand tag="h1">Decide</b-navbar-brand>
+            <button type="button" class="btn btn-dark" onclick="activateDarkMode()">Modo oscuro</button>
+            <button type="button" class="btn btn-light" onclick="activateLightMode()">Modo claro</button>
         </b-navbar>
 
         <!-- OLD DATA, deprecated
-        <div class="voting container">
-            <h1>[[ voting.id ]] - [[ voting.name ]] </h1>
+         <div id="divId1" class="voting container">
+            <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
 
             <h2 v-if="!voting.start_date">Votación no comenzada</h2>
             <h2 v-else-if="!voting.end_date">Votación en curso</h2>
             <div v-else>
                 <h2 class="heading">Resultados:</h2>
-                <table class="table table-bordered table-striped">
+                <table id="tableVoting" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Opción</th>
@@ -69,7 +71,7 @@
                         <tr v-for="opt in voting.postproc" :key="opt.number">
                             <th>[[opt.option]]</th>
                             <td>[[opt.postproc]]</td>
-                            <td class="text-muted">[[opt.votes]]</td>
+                            <td>[[opt.votes]]</td>
                         </tr>
                     </tbody>
                 </table>
@@ -341,5 +343,55 @@
                 }
             }
         });
+    </script>
+    <script>
+        function setCookie(cookieName, cookieValue, expiresDays) {
+            var today = new Date();
+            today.setTime(today.getTime() + (expiresDays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + today.toGMTString();
+            document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+        }
+
+        function getCookie(cookieName) {
+            var name = cookieName + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var cookies = decodedCookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var c = cookies[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        function checkCookie() {
+            var activatedTheme = getCookie("theme");
+
+            if (activatedTheme == "dark") {
+                activateDarkMode();
+            }
+        }
+
+        function activateDarkMode() {
+            document.body.className = "bg-dark";
+            // Lines below are deprecated
+            //document.getElementById("divId1").style.color = "#ffffff";
+            //document.getElementById("tableVoting").style.color = "#ffffff";
+            setCookie("theme", "dark", 365);
+        }
+
+        function activateLightMode() {
+            document.body.className = "bg-light";
+            // Lines below are deprecated
+            //document.getElementById("divId1").style.color = "#212529";
+            //document.getElementById("tableVoting").style.color = "#212529";
+            setCookie("theme", "light", 365);
+        }
+
+        window.onload = checkCookie();
     </script>
 {% endblock %}
