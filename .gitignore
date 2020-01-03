@@ -104,6 +104,8 @@ ENV/
 .mypy_cache/
 
 .vagrant
-.vscode/
+
+# Webstorm
+.vscode/*
 decide/.vscode
 *_copy
