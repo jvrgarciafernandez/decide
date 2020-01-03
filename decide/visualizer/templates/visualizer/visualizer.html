@@ -7,6 +7,7 @@
     <link type="text/css" rel="stylesheet"
          href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
     <link type="text/css" rel="stylesheet" href="{% static "booth/style.css" %}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -23,7 +24,6 @@
             <h2 v-else-if="!voting.end_date">Votación en curso</h2>
             <div v-else>
                 <h2 class="heading">Resultados:</h2>
-
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
@@ -41,12 +41,14 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
+        <canvas id="canvas" width="250" height="100"></canvas>
     </div>
 {% endblock %}
 
 {% block extrabody %}
+
+    <!-- ChartJS -->
     <!-- Vuejs -->
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
@@ -60,7 +62,48 @@
             data: {
                 voting: voting
             }
-        })
+        });
+
+        //console.log(voting);
+
+        let question = voting.name;
+        let labels = [];
+        let datas = [];
+        let postproc = voting.postproc;
+        let colors = [];
+
+        for (let i = 0; i < postproc.length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            colors.push(rgb);
+        }
+
+
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        new Chart(context, {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: "",
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
     </script>
 </body>
 {% endblock %}
