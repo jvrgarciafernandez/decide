@@ -7,7 +7,39 @@
     <link type="text/css" rel="stylesheet"
          href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
     <link type="text/css" rel="stylesheet" href="{% static "booth/style.css" %}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
+    <script src="../../static/Chart.js"></script>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" 
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+      
+      <!-- Icons -->
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+      <script src="https://kit.fontawesome.com/c3222e2033.js" crossorigin="anonymous"></script>
+      <style>
+         .v-aling {
+         display: inline-flex;
+         vertical-align: middle;
+         }
+         .fa, .fas {
+         line-height: 1.5 !important;
+         margin-right: 5px;
+         }
+         .pointer {
+         cursor: pointer !important;
+         }
+         .card-shadow-1 {
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+         }
+         .card-shadow-2 {
+         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+         border: none !important;
+         }
+         .card-shadow-3{ box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+         }
+      </style>
 {% endblock %}
 
 {% block content %}
@@ -19,7 +51,8 @@
             <button type="button" class="btn btn-light" onclick="activateLightMode()">Modo claro</button>
         </b-navbar>
 
-        <div id="divId1" class="voting container">
+        <!-- OLD DATA, deprecated
+         <div id="divId1" class="voting container">
             <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
 
             <h2 v-if="!voting.start_date">Votación no comenzada</h2>
@@ -43,20 +76,208 @@
                     </tbody>
                 </table>
             </div>
+        </div>-->
+    
+
+    <main role="main">
+        <div class="container mt-4">
+           <div class="card card-shadow-2 bg-white">
+              <div class="card-body text-center">
+                 <ul class="nav">
+                    <li class="nav-item d-flex justify-content-start">
+                        <div class="text-info mr-1 pointer" data-container="body" data-toggle="popover" data-placement="bottom" 
+                             data-content="Si posee una discapacidad de la visión de los colores utilice los ajustes 
+                        ofrecidos para que obtenga una correcta visualización de los gráficos. 
+                                           Si no conoce que tipo de Discromatopsia padece, pruebe los distintos ajustes hasta comprobar que distingue
+                        todos los colores."><i class="far fa-lg fa-question-circle" style="line-height:1.5"></i></div>
+                       <div class="dropdown">
+                          <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" 
+                             id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Simular espacio de color
+                          </a>
+                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                             <a class="dropdown-item active" href="#">Desactivado</a>
+                             <a class="dropdown-item" href="#">Monocromático</a>
+                             <a class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
+                             <a class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
+                             <a class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
+                          </div>
+                       </div> 
+                    </li>
+                    <li class="nav-item">
+                       <div class="dropdown">
+                          <a class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
+                             id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Modo oscuro
+                          </a>
+                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                             <a class="dropdown-item active" href="#">Desactivado</a>
+                             <a class="dropdown-item" href="#">Activado</a>
+                          </div>
+                       </div>
+                    </li>
+                 </ul>
+              </div>
+           </div>
+           <div class="row">
+              <div class="col-sm">
+                 <div class="card card-shadow-2 bg-white mt-4">
+                    <div class="card-body">
+                       <h6 class="card-title text-muted" >Nº DE OPCIONES</h6>
+                       <h3 class="card-text text-center mb-3">[[ voting.postproc.length ]]</h3>
+                    </div>
+                 </div>
+              </div>
+              <div class="col-sm">
+                 <div class="card card-shadow-2 bg-white mt-4">
+                    <div class="card-body">
+                       <h6 class="card-title text-muted">Nº DE VOTOS</h6>
+                       <h3 id="total_votes" class="card-text text-center mb-3">0</h3>
+                    </div>
+                 </div>
+              </div>
+              <div class="col-sm">
+               <div class="card card-shadow-2 bg-white mt-4">
+                  <div class="card-body">
+                   <h6 class="card-title text-muted">COMIENZO</h6>
+                   <h3 id="start_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
+                  </div>
+               </div>
+            </div>
+              <div class="col-sm">
+                 <div class="card card-shadow-2 bg-white mt-4">
+                    <div class="card-body">
+                       <h6 class="card-title text-muted">FINALIZACIÓN</h6>
+                       <h3 id="end_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
+                    </div>
+                 </div>
+              </div>
+           </div>
+           <div class="row">
+              <div class="col-sm">
+                 <div class="accordion" id="graphics">
+                    <!-- congreso -->
+                    <div class="card card-shadow-2 bg-white mt-4">
+                       <a data-toggle="collapse" data-target="#congreso" aria-expanded="true" aria-controls="congreso" class="pointer">
+                          <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Congreso</h5>
+                       </a>
+                       <div id="congreso" class="collapse show" aria-labelledby="headingCongreso" data-parent="#graphics">
+                          <div class="card-body">
+                             <h5 class="card-title">Gráfica de votos del Congreso</h5>
+                             <p class="card-text"><canvas id="canvas" width="250" height="100"></canvas></p>
+                             <div class="btn-group" role="group" aria-label="senado-actions">
+                                <button type="button" class="btn btn-secondary v-aling" data-toggle="modal" data-target="#exportModal">
+                                <i class="fas fa-file-export"></i> <span>Exportar</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary v-aling" data-toggle="modal" data-target="#shareModal">
+                                <i class="fas fa-share-alt"></i> <span>Compartir</span>
+                                </button>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+                    <!-- TO DO: senado 
+                    <div class="card card-shadow-2 bg-white">
+                       <a data-toggle="collapse" data-target="#senado" aria-expanded="true" aria-controls="senado" class="pointer">
+                          <h5 class="card-header text-muted" id="headingSenado"><i class="fas fa-chart-pie"></i> Senado</h5>
+                       </a>
+                       <div id="senado" class="collapse" aria-labelledby="headingSenado" data-parent="#graphics">
+                          <div class="card-body">
+                             <h5 class="card-title">Gráfica de votos del Senado</h5>
+                             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                             <div class="btn-group" role="group" aria-label="senado-actions">
+                                <button type="button" class="btn btn-secondary v-aling"  data-toggle="modal" data-target="#exportModal">
+                                <i class="fas fa-file-export"></i> <span>Exportar</span>
+                                </button>
+                                <button type="button" class="btn btn-secondary v-aling"  data-toggle="modal" data-target="#shareModal">
+                                <i class="fas fa-share-alt"></i> <span>Compartir</span>
+                                </button>
+                             </div>
+                          </div>
+                       </div>
+                    </div> -->
+                 </div>
+              </div>
+           </div>
         </div>
-        <canvas id="canvas" width="250" height="100"></canvas>
+        <!-- Export Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="export" aria-hidden="true">
+           <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">import_export</i> Exportar</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+                 <div class="modal-body">
+                    <button type="button" class="btn btn-outline-primary btn-block">
+                    <i class="fas fa-file-pdf"></i> PDF</button> 
+                    <button type="button" class="btn btn-outline-success btn-block">
+                    <i class="fas fa-file-csv"></i> CSV</button>
+                 </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                 </div>
+              </div>
+           </div>
+        </div>
+        <!-- Share Modal -->
+        <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="share" aria-hidden="true">
+           <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">share</i> Compartir</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                 </div>
+                 <div class="modal-body">
+                    Botones para las distintas redes sociales....
+                 </div>
+                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                 </div>
+              </div>
+           </div>
+        </div>
+     </main>
+     <footer class="mt-5 mb-3">
+        <div class="container">
+           <div class="card card-shadow-2 bg-white">
+              <div class="card-body text-center">Visualización de datos de la plataforma de votación digital 
+                <a href="https://getbootstrap.com/">Decide Dialga</a>, por el grupo <a href="https://twitter.com/mdo">Dialga-Visualizer</a>.</div>
+           </div>
+        </div>
+     </footer>
     </div>
 {% endblock %}
 
 {% block extrabody %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" 
+            integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" 
+            integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" 
+            integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <!-- ChartJS -->
     <!-- Vuejs -->
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-
     <script>
+        document.getElementsByTagName("body")[0].className = "bg-light";
+        
+        
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+
+        //ChartJS
         var voting = {{voting|safe}};
         var app = new Vue({
             delimiters: ['[[', ']]'],
@@ -66,8 +287,24 @@
             }
         });
 
+        function getTotalVotes(){
+           var res = 0
+           for (var i = 0; i < voting.postproc.length; i++) {
+              res += voting.postproc[i]["votes"]
+           }
+           return res;
+        }
+
+        voting.end_date = new Date(voting.end_date);
+        voting.start_date = new Date(voting.start_date);
+        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getMinutes()+" "+voting.start_date.getDate()+"/"
+          +(voting.start_date.getMonth()+1)+"/"+voting.start_date.getFullYear();
+        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getMinutes()+" "+voting.end_date.getDate()+"/"
+          +(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
+        document.getElementById("total_votes").innerText = getTotalVotes();
         //console.log(voting);
 
+       
         let question = voting.name;
         let labels = [];
         let datas = [];
@@ -107,7 +344,6 @@
             }
         });
     </script>
-
     <script>
         function setCookie(cookieName, cookieValue, expiresDays) {
             var today = new Date();
@@ -141,20 +377,21 @@
         }
 
         function activateDarkMode() {
-            document.body.style.background = "#060d14";
-            document.getElementById("divId1").style.color = "#ffffff";
-            document.getElementById("tableVoting").style.color = "#ffffff";
+            document.body.className = "bg-dark";
+            // Lines below are deprecated
+            //document.getElementById("divId1").style.color = "#ffffff";
+            //document.getElementById("tableVoting").style.color = "#ffffff";
             setCookie("theme", "dark", 365);
         }
 
         function activateLightMode() {
-            document.body.style.background = "#ffffff";
-            document.getElementById("divId1").style.color = "#212529";
-            document.getElementById("tableVoting").style.color = "#212529";
+            document.body.className = "bg-light";
+            // Lines below are deprecated
+            //document.getElementById("divId1").style.color = "#212529";
+            //document.getElementById("tableVoting").style.color = "#212529";
             setCookie("theme", "light", 365);
         }
 
         window.onload = checkCookie();
     </script>
-</body>
 {% endblock %}
