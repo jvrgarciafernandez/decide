@@ -44,6 +44,19 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_swagger',
     'gateway',
+
+    # Apps needed fod SocialAuth branch
+    'django.contrib.sites',
+    # This apps we will need for allauth apirest responses
+    'rest_auth',
+    'rest_auth.registration',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
+    #################################################
 ]
 
 REST_FRAMEWORK = {
@@ -56,7 +69,20 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = [
     'base.backends.AuthBackend',
+
+    # Needed for SocialAuth branch
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+    #################################################
 ]
+
+SITE_ID = 2  # Cuidado con el id, viene de la bd
+
+# Used for Login and Social Auth branches
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_REDIRECT_URL = 'index'
+#################################################
+
 
 MODULES = [
     'authentication',
@@ -87,7 +113,7 @@ ROOT_URLCONF = 'decide.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates'), ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -157,6 +183,18 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = ''
+
+STATICFILES_DIRS = (
+    'static',
+)
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = ''
+
+MEDIAFILES_DIRS = (
+    'media',
+)
 
 # number of bits for the key, all auths should use the same number of bits
 KEYBITS = 256
@@ -180,3 +218,5 @@ if os.path.exists("config.jsonnet"):
 
 
 INSTALLED_APPS = INSTALLED_APPS + MODULES
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
