@@ -107,5 +107,4 @@ ENV/
 
 # Webstorm
 .vscode/*
-decide/.vscode
-*_copy
+
