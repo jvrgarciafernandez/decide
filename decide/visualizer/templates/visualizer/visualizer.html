@@ -39,6 +39,9 @@
          }
          .card-shadow-3{ box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
          }
+         .bg-dark-mode{
+            background-color: #000000;
+         }
       </style>
 {% endblock %}
 
@@ -47,8 +50,6 @@
         <!-- Navbar -->
         <b-navbar type="dark" variant="secondary">
             <b-navbar-brand tag="h1">Decide</b-navbar-brand>
-            <button type="button" class="btn btn-dark" onclick="activateDarkMode()">Modo oscuro</button>
-            <button type="button" class="btn btn-light" onclick="activateLightMode()">Modo claro</button>
         </b-navbar>
 
         <!-- OLD DATA, deprecated
@@ -82,7 +83,7 @@
     <main role="main">
         <div class="container mt-4">
            <div class="card card-shadow-2 bg-white">
-              <div class="card-body text-center">
+              <div id="topCard" class="card-body text-center">
                  <ul class="nav">
                     <li class="nav-item d-flex justify-content-start">
                         <div class="text-info mr-1 pointer" data-container="body" data-toggle="popover" data-placement="bottom" 
@@ -91,7 +92,7 @@
                                            Si no conoce que tipo de Discromatopsia padece, pruebe los distintos ajustes hasta comprobar que distingue
                         todos los colores."><i class="far fa-lg fa-question-circle" style="line-height:1.5"></i></div>
                        <div class="dropdown">
-                          <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" 
+                          <a id="daltonicButton" class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" 
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Simular espacio de color
                           </a>
@@ -106,13 +107,13 @@
                     </li>
                     <li class="nav-item">
                        <div class="dropdown">
-                          <a class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
+                          <a id="darkModeButton" class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Modo oscuro
                           </a>
                           <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a class="dropdown-item active" href="#">Desactivado</a>
-                             <a class="dropdown-item" href="#">Activado</a>
+                           <a id="activeDarkModeButton" class="dropdown-item" href="#" onclick="activateDarkMode()">Activado</a>
+                           <a id="activeLightModeButton" class="dropdown-item active" href="#" onclick="activateLightMode()">Desactivado</a>
                           </div>
                        </div>
                     </li>
@@ -122,7 +123,7 @@
            <div class="row">
               <div class="col-sm">
                  <div class="card card-shadow-2 bg-white mt-4">
-                    <div class="card-body">
+                    <div id="optionsNumberCard" class="card-body">
                        <h6 class="card-title text-muted" >Nº DE OPCIONES</h6>
                        <h3 class="card-text text-center mb-3">[[ voting.postproc.length ]]</h3>
                     </div>
@@ -130,7 +131,7 @@
               </div>
               <div class="col-sm">
                  <div class="card card-shadow-2 bg-white mt-4">
-                    <div class="card-body">
+                    <div id="votesNumberCard" class="card-body">
                        <h6 class="card-title text-muted">Nº DE VOTOS</h6>
                        <h3 id="total_votes" class="card-text text-center mb-3">0</h3>
                     </div>
@@ -138,7 +139,7 @@
               </div>
               <div class="col-sm">
                <div class="card card-shadow-2 bg-white mt-4">
-                  <div class="card-body">
+                  <div id="beginCard" class="card-body">
                    <h6 class="card-title text-muted">COMIENZO</h6>
                    <h3 id="start_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
                   </div>
@@ -146,7 +147,7 @@
             </div>
               <div class="col-sm">
                  <div class="card card-shadow-2 bg-white mt-4">
-                    <div class="card-body">
+                    <div id="finishCard" class="card-body">
                        <h6 class="card-title text-muted">FINALIZACIÓN</h6>
                        <h3 id="end_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
                     </div>
@@ -157,7 +158,7 @@
               <div class="col-sm">
                  <div class="accordion" id="graphics">
                     <!-- congreso -->
-                    <div class="card card-shadow-2 bg-white mt-4">
+                    <div id="congressCard" class="card card-shadow-2 bg-white mt-4">
                        <a data-toggle="collapse" data-target="#congreso" aria-expanded="true" aria-controls="congreso" class="pointer">
                           <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Congreso</h5>
                        </a>
@@ -244,7 +245,7 @@
      </main>
      <footer class="mt-5 mb-3">
         <div class="container">
-           <div class="card card-shadow-2 bg-white">
+           <div id="footerVis" class="card card-shadow-2 bg-white">
               <div class="card-body text-center">Visualización de datos de la plataforma de votación digital 
                 <a href="https://getbootstrap.com/">Decide Dialga</a>, por el grupo <a href="https://twitter.com/mdo">Dialga-Visualizer</a>.</div>
            </div>
@@ -350,47 +351,59 @@
             today.setTime(today.getTime() + (expiresDays * 24 * 60 * 60 * 1000));
             var expires = "expires=" + today.toGMTString();
             document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
-        }
+         }
 
-        function getCookie(cookieName) {
+         function getCookie(cookieName) {
             var name = cookieName + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
             var cookies = decodedCookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
-                var c = cookies[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
+               var c = cookies[i];
+               while (c.charAt(0) == ' ') {
+                  c = c.substring(1);
+               }
+               if (c.indexOf(name) == 0) {
+                  return c.substring(name.length, c.length);
+               }
             }
             return "";
-        }
+         }
 
-        function checkCookie() {
+         function checkCookie() {
             var activatedTheme = getCookie("theme");
 
             if (activatedTheme == "dark") {
-                activateDarkMode();
+               activateDarkMode();
             }
-        }
+         }
 
-        function activateDarkMode() {
-            document.body.className = "bg-dark";
-            // Lines below are deprecated
-            //document.getElementById("divId1").style.color = "#ffffff";
-            //document.getElementById("tableVoting").style.color = "#ffffff";
+         function activateDarkMode() {
+            document.body.className = "bg-dark-mode";
+            document.getElementById("topCard").className = "bg-dark card-body text-center";
+            document.getElementById("optionsNumberCard").className = "text-white bg-dark card-body";
+            document.getElementById("votesNumberCard").className = "text-white bg-dark card-body";
+            document.getElementById("beginCard").className = "text-white bg-dark card-body";
+            document.getElementById("finishCard").className = "text-white bg-dark card-body";
+            document.getElementById("congressCard").className = "card card-shadow-2 mt-4 text-white bg-dark";
+            document.getElementById("footerVis").className = "card card-shadow-2 text-white bg-dark";
+            document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-light dropdown-toggle";
+            document.getElementById("darkModeButton").className = "btn btn-sm btn-outline-info dropdown-toggle ml-2";
             setCookie("theme", "dark", 365);
-        }
+         }
 
-        function activateLightMode() {
+         function activateLightMode() {
             document.body.className = "bg-light";
-            // Lines below are deprecated
-            //document.getElementById("divId1").style.color = "#212529";
-            //document.getElementById("tableVoting").style.color = "#212529";
+            document.getElementById("topCard").className = "bg-light card-body text-center";
+            document.getElementById("optionsNumberCard").className = "bg-light card-body";
+            document.getElementById("votesNumberCard").className = "bg-light card-body";
+            document.getElementById("beginCard").className = "bg-light card-body";
+            document.getElementById("finishCard").className = "bg-light card-body";
+            document.getElementById("congressCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("footerVis").className = "card card-shadow-2 bg-white";
+            document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-secondary dropdown-toggle";
+            document.getElementById("darkModeButton").className = "btn btn-sm btn-dark dropdown-toggle ml-2";
             setCookie("theme", "light", 365);
-        }
+         }
 
         window.onload = checkCookie();
     </script>
