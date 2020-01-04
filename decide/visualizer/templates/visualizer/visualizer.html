@@ -378,6 +378,7 @@
          }
 
          function activateDarkMode() {
+            changeSelectorDarkMode("dark");
             document.body.className = "bg-dark-mode";
             document.getElementById("topCard").className = "bg-dark card-body text-center";
             document.getElementById("optionsNumberCard").className = "text-white bg-dark card-body";
@@ -392,6 +393,7 @@
          }
 
          function activateLightMode() {
+            changeSelectorDarkMode("light");
             document.body.className = "bg-light";
             document.getElementById("topCard").className = "bg-light card-body text-center";
             document.getElementById("optionsNumberCard").className = "bg-light card-body";
@@ -403,6 +405,16 @@
             document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-secondary dropdown-toggle";
             document.getElementById("darkModeButton").className = "btn btn-sm btn-dark dropdown-toggle ml-2";
             setCookie("theme", "light", 365);
+         }
+
+         function changeSelectorDarkMode(mode) {
+            if (mode == "dark") {
+               document.getElementById("activeDarkModeButton").className = "dropdown-item active";
+               document.getElementById("activeLightModeButton").className = "dropdown-item";
+            } else {
+               document.getElementById("activeDarkModeButton").className = "dropdown-item";
+               document.getElementById("activeLightModeButton").className = "dropdown-item active";
+            }
          }
 
         window.onload = checkCookie();
