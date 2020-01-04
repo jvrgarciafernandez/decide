@@ -164,7 +164,18 @@
                        <div id="congreso" class="collapse show" aria-labelledby="headingCongreso" data-parent="#graphics">
                           <div class="card-body">
                              <h5 class="card-title">Gráfica de votos del Congreso</h5>
-                             <p class="card-text"><canvas id="canvas" width="250" height="100"></canvas></p>
+                             <p class="card-text">
+                                 <canvas id="canvas" width="250" height="100"></canvas>
+                                 <label>
+                                     <select class="changeGraph" onchange="changeTypeChartJsGraph();">
+                                         <option value="pie" selected>Circular (tarta)</option>
+                                         <option value="bar">Diagrama de barras verticales</option>
+                                         <option value="polarArea">Area polar</option>
+                                         <option value="doughnut">Rosquilla</option>
+                                         <option value="horizontalBar">Diagrama de barras horizontales</option>
+                                     </select>
+                                 </label>
+                             </p>
                              <div class="btn-group" role="group" aria-label="senado-actions">
                                 <button type="button" class="btn btn-secondary v-aling" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-export"></i> <span>Exportar</span>
@@ -326,12 +337,13 @@
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext('2d');
 
-        new Chart(context, {
-            type: 'pie',
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
             data: {
                 labels: labels,
                 datasets: [{
-                    label: "",
                     backgroundColor: colors,
                     data: datas
                 }]
@@ -343,6 +355,90 @@
                 }
             }
         });
+
+        //Function to change the type of the chartjs graph
+        function changeTypeChartJsGraph() {
+            let option = document.getElementsByClassName("changeGraph");
+            graphType = option[0].value;
+            graph.destroy();
+
+            if(graphType === 'horizontalBar') {
+                graph = new Chart(context, {
+                    type: graphType,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "",
+                            backgroundColor: colors,
+                            data: datas
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                ticks: {
+                                    min: 0,
+                                }
+                            }]
+                        },
+                        title: {
+                            display: true,
+                            text: question
+                        }
+                    }
+                });
+            } else {
+                if(graphType !== 'pie' && graphType !== 'doughnut' && graphType !== 'polarArea') {
+                    graph = new Chart(context, {
+                        type: graphType,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: "",
+                                backgroundColor: colors,
+                                data: datas
+                            }]
+                        },
+                        options: {
+                            legend: {display: false},
+                            scales: {
+                                yAxes: [{
+                                    display: true,
+                                    ticks: {
+                                        min: 0,
+                                    }
+                                }]
+                            },
+                            title: {
+                                display: true,
+                                text: question
+                            }
+                        }
+                    });
+                } else {
+                    graph = new Chart(context, {
+                        type: graphType,
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: "",
+                                backgroundColor: colors,
+                                data: datas
+                            }]
+                        },
+                        options: {
+                            title: {
+                                display: true,
+                                text: question
+                            }
+                        }
+                    });
+                }
+            }
+
+        }
     </script>
     <script>
         function setCookie(cookieName, cookieValue, expiresDays) {
