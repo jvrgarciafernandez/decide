@@ -58,6 +58,16 @@ class VotingAdmin(admin.ModelAdmin):
 
     actions = [ start, stop, tally, deleteAll ]
 
+    def delete_model(self, request, obj):
+        votes = Vote.objects.all()
+
+        for i in votes:
+            if i.voting_id == obj.id:
+                i.delete()
+
+
+        super(VotingAdmin, self).delete_model(request,obj)
+
 
 
 
