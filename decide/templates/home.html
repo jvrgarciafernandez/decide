@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Welcome, {{ user.get_full_name }} <small>{{ user.username }}</small>!</h2>
-  <p>Your email address: {{ user.email }}</p>
-  <p>Your email address for GitHub: {{ user.email1 }}</p>
-  <p>Your email address for Facebook: {{ user.email2 }}</p>
+<h2>Welcome, {{ user.get_full_name }} <small>{{ user.username }}</small>!</h2>
+<p>Your email address: {{ user.email }}</p>
+<p>Your email address for GitHub: {{ user.email1 }}</p>
+<p>Your email address for Facebook: {{ user.email2 }}</p>
 {% endblock %}
