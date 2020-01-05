@@ -1,7 +1,7 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load account socialaccount %}
+{% load account socialaccount static %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
@@ -79,4 +79,9 @@
   </div>
 </div>
 
+{% endblock %}
+
+
+{% block extrabody %}
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
 {% endblock %}
