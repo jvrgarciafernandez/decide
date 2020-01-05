@@ -1,6 +1,6 @@
 import datetime
 import random
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.utils import timezone
 from django.test import TestCase
 from rest_framework.test import APIClient
@@ -16,6 +16,8 @@ from mixnet.models import Key
 from voting.models import Question
 from voting.models import Voting
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class StoreTextCase(BaseTestCase):
 

@@ -1,17 +1,16 @@
 {% extends "account/base.html" %}
 
 {% load i18n %}
-{% load account socialaccount %}
+{% load account socialaccount static %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
-
 {% block content %}
 
-<div class="container">
+<div class="container-auth">
   <div class="d-flex justify-content-center h-100">
-    <div class="card">
-      <div class="card-header">
+    <div class="card card-auth">
+      <div class="card-header-auth">
         <h3>Sign In</h3>
         <div class="d-flex justify-content-end social_icon">
           {% include "socialaccount/snippets/provider_list.html" with process="login" %}
@@ -76,4 +75,9 @@
   </div>
 </div>
 
+{% endblock %}
+
+
+{% block extrabody %}
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
 {% endblock %}
