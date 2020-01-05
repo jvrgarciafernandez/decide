@@ -6,6 +6,7 @@ from .models import Question
 from .models import Voting
 
 from .filters import StartedFilter
+from store.models import Vote
 
 
 def start(modeladmin, request, queryset):
@@ -26,6 +27,17 @@ def tally(ModelAdmin, request, queryset):
         token = request.session.get('auth-token', '')
         v.tally_votes(token)
 
+def deleteAll(ModelAdmin, request, queryset):
+    for v in queryset:
+        token = request.session.get('auth-token', '')
+        votes = Vote.objects.all()
+
+
+        for i in votes:
+            if i.voting_id == v.id:
+                i.delete()
+                v.delete()
+
 
 class QuestionOptionInline(admin.TabularInline):
     model = QuestionOption
@@ -44,7 +56,9 @@ class VotingAdmin(admin.ModelAdmin):
     list_filter = (StartedFilter,)
     search_fields = ('name', )
 
-    actions = [ start, stop, tally ]
+    actions = [ start, stop, tally, deleteAll ]
+
+
 
 
 admin.site.register(Voting, VotingAdmin)

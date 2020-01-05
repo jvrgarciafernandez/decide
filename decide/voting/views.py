@@ -9,6 +9,9 @@ from .models import Question, QuestionOption, Voting
 from .serializers import SimpleVotingSerializer, VotingSerializer
 from base.perms import UserIsStaff
 from base.models import Auth
+from store.models import Vote
+
+
 
 
 class VotingView(generics.ListCreateAPIView):
@@ -94,7 +97,17 @@ class VotingUpdate(generics.RetrieveUpdateDestroyAPIView):
                 st = status.HTTP_400_BAD_REQUEST
             else:
                 voting.tally_votes(request.auth.key)
+
                 msg = 'Voting tallied'
+
+        elif action == 'deleteAll':
+            votes = voting.get_votes(request.auth.key)
+
+
+
+
+
+
         else:
             msg = 'Action not found, try with start, stop or tally'
             st = status.HTTP_400_BAD_REQUEST
