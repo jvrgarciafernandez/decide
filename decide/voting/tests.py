@@ -2,7 +2,8 @@ import random
 import itertools
 from django.utils import timezone
 from django.conf import settings
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
@@ -15,6 +16,8 @@ from mixnet.mixcrypt import MixCrypt
 from mixnet.models import Auth
 from voting.models import Voting, Question, QuestionOption
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class VotingTestCase(BaseTestCase):
 

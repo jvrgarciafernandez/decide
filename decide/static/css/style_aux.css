@@ -1,0 +1,27 @@
+/* Este archivo CSS es una pequeña copia del principal, hecho con el fin de eliminar conflictos entre módulos.
+Solo contiene bg-image para ser usado en el base html y que no afecte a otros html.*/
+
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+.bg-image {
+    /* The image used */
+    background-image: url("https://images.unsplash.com/photo-1540910419892-4a36d2c3266c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80");
+
+    /* Add the blur effect */
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    opacity: 0.4;
+
+    /* Full height */
+    height: 100%;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    display: block;
+
+    /* Center and scale the image nicely */
+    /* background-position: center; */
+    background-repeat: no-repeat;
+    background-size: cover;
+}

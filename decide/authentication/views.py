@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.authtoken.models import Token
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+from .models import CustomUser
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, render, redirect
 from django.core.exceptions import ObjectDoesNotExist
@@ -70,7 +71,7 @@ class RegisterView(APIView):
             return Response({}, status=HTTP_400_BAD_REQUEST)
 
         try:
-            user = User(username=username)
+            user = CustomUser(username=username)
             user.set_password(pwd)
             user.save()
             token, _ = Token.objects.get_or_create(user=user)
