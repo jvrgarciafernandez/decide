@@ -1,13 +1,17 @@
 import json
-from django.views.generic import TemplateView
+
 from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
+from django.views.generic import TemplateView
 
 from base import mods
 
 
 # TODO: check permissions and census
-class BoothView(TemplateView):
+class BoothView(LoginRequiredMixin, TemplateView):
+    login_url = '/authentication/accounts/login/'
+    redirect_field_name = 'redirect_to'
     template_name = 'booth/booth.html'
 
     def get_context_data(self, **kwargs):
