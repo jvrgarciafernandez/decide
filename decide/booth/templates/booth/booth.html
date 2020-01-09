@@ -30,15 +30,24 @@
 
             <!-- Register -->
             <b-form @submit="onSubmitLogin" v-if="signup">
-            <h2>{% trans "To vote it is necessary to identify again" %}</h2>
-                <!-- <b-form-group label="{% trans "Username" %}" label-for="username">
+            <h2>{% trans "To vote it's necessary to identify youself again." %}</h2>
+            <h5>{% trans "You're currently logged in as" %} {{ request.user }}. {% trans "Please, rewrite your password." %}</h5>
+                <b-form-group label="{% trans "Username" %}" label-for="username">
                     <b-form-input
                         id="username"
                         type="text"
+                        value="{{ request.user }}"
+                        autocomplete="username"
+                        readonly
+                        required />
+                    <!-- <b-form-input
+                        id="username"
+                        type="text"
+                        value="{{ request.user }}"
                         v-model="form.username"
                         autocomplete="username"
-                        required />
-                </b-form-group> -->
+                        required /> -->
+                </b-form-group>
                 <b-form-group label="{% trans "Password" %}" label-for="password">
                     <b-form-input
                         id="password"
