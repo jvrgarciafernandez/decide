@@ -44,41 +44,6 @@
 
 {% block content %}
     <div id="app-visualizer">
-        <!-- Navbar -->
-        <b-navbar type="dark" variant="secondary">
-            <b-navbar-brand tag="h1">Decide</b-navbar-brand>
-            <button type="button" class="btn btn-dark" onclick="activateDarkMode()">Modo oscuro</button>
-            <button type="button" class="btn btn-light" onclick="activateLightMode()">Modo claro</button>
-        </b-navbar>
-
-        <!-- OLD DATA, deprecated
-         <div id="divId1" class="voting container">
-            <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
-
-            <h2 v-if="!voting.start_date">Votación no comenzada</h2>
-            <h2 v-else-if="!voting.end_date">Votación en curso</h2>
-            <div v-else>
-                <h2 class="heading">Resultados:</h2>
-                <table id="tableVoting" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Opción</th>
-                            <th>Puntuación</th>
-                            <th>Votos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="opt in voting.postproc" :key="opt.number">
-                            <th>[[opt.option]]</th>
-                            <td>[[opt.postproc]]</td>
-                            <td>[[opt.votes]]</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
-    
-
     <main role="main">
         <div class="container mt-4">
            <div class="card card-shadow-2 bg-white">
