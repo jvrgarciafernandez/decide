@@ -31,14 +31,14 @@
             <!-- Register -->
             <b-form @submit="onSubmitLogin" v-if="signup">
             <h2>{% trans "To vote it is necessary to identify again" %}</h2>
-                <b-form-group label="{% trans "Username" %}" label-for="username">
+                <!-- <b-form-group label="{% trans "Username" %}" label-for="username">
                     <b-form-input
                         id="username"
                         type="text"
                         v-model="form.username"
                         autocomplete="username"
                         required />
-                </b-form-group>
+                </b-form-group> -->
                 <b-form-group label="{% trans "Password" %}" label-for="password">
                     <b-form-input
                         id="password"
