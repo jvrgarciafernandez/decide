@@ -89,6 +89,8 @@ celerybeat-schedule
 .venv
 venv/
 ENV/
+bin/
+pyvenv.cfg
 
 # Spyder project settings
 .spyderproject
@@ -110,5 +112,5 @@ ENV/
 decide/.vscode
 *_copy
 
-#macOS
+# macOS
 .DS_Store
