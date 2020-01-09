@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css?family=Numans');
 
 html,
-body {
+.body-auth {
     height: 100%;
     font-family: 'Numans', sans-serif;
 }
@@ -31,7 +31,7 @@ body {
     background-size: cover;
 }
 
-.container {
+.container-auth {
     height: 100%;
     align-content: center;
 }
@@ -45,7 +45,7 @@ body {
     margin-right: 20px;
 }
 
-.card {
+.card-auth {
     height: 450px;
     margin-top: auto;
     margin-bottom: auto;
@@ -64,7 +64,7 @@ body {
     cursor: pointer;
 }
 
-.card-header h3 {
+.card-header-auth h3 {
     color: white;
 }
 

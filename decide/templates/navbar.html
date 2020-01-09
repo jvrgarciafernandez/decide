@@ -1,3 +1,5 @@
+{% load account socialaccount static %}
+
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
   <a class="navbar-brand" href="#">Decide-Dialga</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
@@ -28,3 +30,7 @@
     </ul>
   </div>
 </nav>
+
+{% block extrabody %}
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+{% endblock %}
