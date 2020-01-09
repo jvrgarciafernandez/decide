@@ -96,12 +96,12 @@
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Simular espacio de color
                           </a>
-                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a class="dropdown-item active" href="#">Desactivado</a>
-                             <a class="dropdown-item" href="#">Monocromático</a>
-                             <a class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
-                             <a class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
-                             <a class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
+                          <div id="dropDownColors" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                             <a id="dropDownColors1" class="dropdown-item active" href="#">Desactivado</a>
+                             <a id="dropDownColors2" class="dropdown-item" href="#">Monocromático</a>
+                             <a id="dropDownColors3" class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
+                             <a id="dropDownColors4" class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
+                             <a id="dropDownColors5" class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
                           </div>
                        </div> 
                     </li>
@@ -111,7 +111,7 @@
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Modo oscuro
                           </a>
-                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                          <div id="dropDownDarkMode" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
                            <a id="activeDarkModeButton" class="dropdown-item" href="#" onclick="activateDarkMode()">Activado</a>
                            <a id="activeLightModeButton" class="dropdown-item active" href="#" onclick="activateLightMode()">Desactivado</a>
                           </div>
@@ -393,6 +393,12 @@
             document.getElementById("buttonPDF").className = "btn btn-primary btn-block";
             document.getElementById("buttonCSV").className = "btn btn-success btn-block";
             document.getElementById("shareDiv").className = "modal-content text-white bg-dark";
+            document.getElementById("dropDownColors").className = "dropdown-menu card-shadow-3 bg-dark";
+            document.getElementById("dropDownColors1").className + "dropdown-item activate text-white";
+            document.getElementById("dropDownColors2").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors3").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors4").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors5").className = "dropdown-item text-white";
             setCookie("theme", "dark", 365);
          }
 
@@ -412,16 +418,24 @@
             document.getElementById("buttonPDF").className = "btn btn-outline-primary btn-block";
             document.getElementById("buttonCSV").className = "btn btn-outline-success btn-block";
             document.getElementById("shareDiv").className = "modal-content";
+            document.getElementById("dropDownColors").className = "dropdown-menu card-shadow-3";
+            document.getElementById("dropDownColors1").className + "dropdown-item activate";
+            document.getElementById("dropDownColors2").className = "dropdown-item";
+            document.getElementById("dropDownColors3").className = "dropdown-item";
+            document.getElementById("dropDownColors4").className = "dropdown-item";
+            document.getElementById("dropDownColors5").className = "dropdown-item";
             setCookie("theme", "light", 365);
          }
 
          function changeSelectorDarkMode(mode) {
             if (mode == "dark") {
-               document.getElementById("activeDarkModeButton").className = "dropdown-item active";
-               document.getElementById("activeLightModeButton").className = "dropdown-item";
+               document.getElementById("activeDarkModeButton").className = "dropdown-item texte-white active";
+               document.getElementById("activeLightModeButton").className = "dropdown-item text-white";
+               document.getElementById("dropDownDarkMode").className = "dropdown-menu card-shadow-3 bg-dark";
             } else {
                document.getElementById("activeDarkModeButton").className = "dropdown-item";
                document.getElementById("activeLightModeButton").className = "dropdown-item active";
+               document.getElementById("dropDownDarkMode").className = "dropdown-menu card-shadow-3 dropdown";
             }
          }
 
