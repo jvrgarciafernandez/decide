@@ -204,7 +204,7 @@
         <!-- Export Modal -->
         <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="export" aria-hidden="true">
            <div class="modal-dialog" role="document">
-              <div class="modal-content">
+              <div id="exportDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">import_export</i> Exportar</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -212,9 +212,9 @@
                     </button>
                  </div>
                  <div class="modal-body">
-                    <button type="button" class="btn btn-outline-primary btn-block">
+                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block">
                     <i class="fas fa-file-pdf"></i> PDF</button> 
-                    <button type="button" class="btn btn-outline-success btn-block">
+                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block">
                     <i class="fas fa-file-csv"></i> CSV</button>
                  </div>
                  <div class="modal-footer">
@@ -389,6 +389,9 @@
             document.getElementById("footerVis").className = "card card-shadow-2 text-white bg-dark";
             document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-light dropdown-toggle";
             document.getElementById("darkModeButton").className = "btn btn-sm btn-outline-info dropdown-toggle ml-2";
+            document.getElementById("exportDiv").className = "modal-content text-white bg-dark";
+            document.getElementById("buttonPDF").className = "btn btn-primary btn-block";
+            document.getElementById("buttonCSV").className = "btn btn-success btn-block";
             setCookie("theme", "dark", 365);
          }
 
@@ -404,6 +407,9 @@
             document.getElementById("footerVis").className = "card card-shadow-2 bg-white";
             document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-secondary dropdown-toggle";
             document.getElementById("darkModeButton").className = "btn btn-sm btn-dark dropdown-toggle ml-2";
+            document.getElementById("exportDiv").className = "modal-content";
+            document.getElementById("buttonPDF").className = "btn btn-outline-primary btn-block";
+            document.getElementById("buttonCSV").className = "btn btn-outline-success btn-block";
             setCookie("theme", "light", 365);
          }
 
