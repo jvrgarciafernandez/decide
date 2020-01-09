@@ -226,7 +226,7 @@
         <!-- Share Modal -->
         <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="share" aria-hidden="true">
            <div class="modal-dialog" role="document">
-              <div class="modal-content">
+              <div id="shareDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">share</i> Compartir</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -392,6 +392,7 @@
             document.getElementById("exportDiv").className = "modal-content text-white bg-dark";
             document.getElementById("buttonPDF").className = "btn btn-primary btn-block";
             document.getElementById("buttonCSV").className = "btn btn-success btn-block";
+            document.getElementById("shareDiv").className = "modal-content text-white bg-dark";
             setCookie("theme", "dark", 365);
          }
 
@@ -410,6 +411,7 @@
             document.getElementById("exportDiv").className = "modal-content";
             document.getElementById("buttonPDF").className = "btn btn-outline-primary btn-block";
             document.getElementById("buttonCSV").className = "btn btn-outline-success btn-block";
+            document.getElementById("shareDiv").className = "modal-content";
             setCookie("theme", "light", 365);
          }
 
