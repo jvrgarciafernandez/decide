@@ -109,3 +109,6 @@ ENV/
 .vscode/*
 decide/.vscode
 *_copy
+
+#macOS
+.DS_Store
