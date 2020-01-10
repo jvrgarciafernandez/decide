@@ -598,11 +598,11 @@
          }
 
          function deleteAlert(mode) {
-            if(mode=="dark") {
-               document.getElementById("alertDarkMode").remove();
-            } else {
-               document.getElementById("alertDarkModeDes").remove();
-            }
+               if (mode == "dark" && document.contains(document.getElementById("alertDarkMode"))) {
+                  document.getElementById("alertDarkMode").remove();
+               } else if (document.contains(document.getElementById("alertDarkModeDes"))) {
+                  document.getElementById("alertDarkModeDes").remove();
+               }
          }
 
         window.onload = checkCookie();
