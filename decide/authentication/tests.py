@@ -205,6 +205,7 @@ class AuthTestCase(APITestCase):
         try:
             signup(request)
         except Exception as exception:
+            print(exception)
             duplicate = True
 
         print(duplicate)
