@@ -3,12 +3,10 @@
 
 {% block content %}
     <form method="post" enctype="multipart/form-data">{% csrf_token %}
-    <div>
-        <label for="id_candidate_file">Select a file: </label>
+
+        <label for="id_candidate_file"><strong>Supported file formats: .xls, .xlsx: </strong></label>
         <input type="file" name="candidate_file" id="id_candidate_file"/>
 
-    <input type="submit" value="Save">
-
-    </div>
-    </form></div>
+        <input type="submit" value="Save">
+    </form>
 {% endblock %}

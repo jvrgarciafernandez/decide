@@ -23,18 +23,18 @@ def get_local_auth():
 
 class ImportSenateCandidates(forms.Form):
 
-    # TODO alguna validación?
     candidate_file = forms.FileField()
 
     @transaction.atomic
     def save(self):
         candidate_file = self.cleaned_data.get('candidate_file', None)
-        excel_object = pd.ExcelFile(candidate_file, engine='xlrd')
-        candidts_x_prov = excel_object.parse(index_col=0).groupby(['Provincia'])
+        df = pd.ExcelFile(candidate_file, engine='xlrd').parse(index_col=0)
 
-        # TODO: pasar el check
+        Voting.checkInputFile(candidate_file)
+        # TODO: se podría refactorizar el check para que solo haya que leer el
+        #       fichero una vez
 
-        for name, group in candidts_x_prov:
+        for name, group in df.groupby(['Provincia']):
             count = 2
 
             quest = Question(desc='Elige un máximo de 2 personas para las '

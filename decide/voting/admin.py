@@ -5,6 +5,7 @@ from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
+from xlrd import XLRDError
 
 from .forms import ImportSenateCandidates
 
@@ -82,11 +83,23 @@ class VotingAdmin(admin.ModelAdmin):
         if request.method == 'POST':
             form = ImportSenateCandidates(request.POST, request.FILES)
             if form.is_valid():
-                form.save()
-                messages.success(request, 'All votings created correctly')
-                return HttpResponseRedirect('/admin/voting/voting')
+                try:
+                    form.save()
+                    messages.success(request, 'All votings created correctly')
+                    return HttpResponseRedirect('/admin/voting/voting')
+                except AssertionError as msg_error:
+                    messages.error(request, msg_error)
+                    return HttpResponseRedirect('')
+                except XLRDError:
+                    messages.error(request, 'Unsupported format or corrupt file'
+                                            '. The file must be a valid excel')
+                except Exception:
+                    messages.error(request, 'Could not commit the operation. '
+                                            'Please, try again or contact with '
+                                            'an administrator')
+                    return HttpResponseRedirect('')
             else:
-                messages.error(request, 'Please correct the error below')
+                messages.error(request, 'Please, select a file')
         else:
             form = ImportSenateCandidates()
 
