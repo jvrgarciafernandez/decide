@@ -286,9 +286,15 @@
             }
         });
 
+        let postproc = voting.postproc;
+        let postproc_length = 0;
+        if(postproc_length !== undefined) {
+            postproc_length = postproc.length
+        }
+
         function getTotalVotes(){
-           var res = 0
-           for (var i = 0; i < voting.postproc.length; i++) {
+           var res = 0;
+           for (var i = 0; i < postproc_length; i++) {
               res += voting.postproc[i]["votes"]
            }
            return res;
@@ -301,26 +307,44 @@
         document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getFullMinutes()+" "+voting.end_date.getDate()+"/"
           +(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
         document.getElementById("total_votes").innerText = getTotalVotes();
-        //console.log(voting);
 
+        var colores = ["rgb(75,192,43)", "rgb(255,37,255)" , "rgb(223,107,171)" , "rgb(84,225,35)"]
+
+        var partidos = ["rgb(142,68,173)","rgb(192,57,43)","rgb(41,128,185)"]
+
+        var PodemosPartido = ["rgb(90,43,110)","rgb(204,97,250)","rgb(142,68,173)","rgb(152,73,186)","rgb(121,58,148)","rgb(60,29,74)", "rgb(208,99,255)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(128,38,28)","rgb(99,30,22)","rgb(191,57,42)","rgb(204,61,45)","rgb(166,49,36)","rgb(255,76,56)","rgb(255,76,56)"]
        
         let question = voting.name;
         let labels = [];
         let datas = [];
-        let postproc = voting.postproc;
         let colors = [];
-
-        for (let i = 0; i < postproc.length; i++) {
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
             let red = Math.floor(Math.random() * 256);
             let green = Math.floor(Math.random() * 256);
             let blue = Math.floor(Math.random() * 256);
             let rgb = "rgb(" + red + "," + green + "," + blue +")";
             labels.push(postproc[i].option);
             datas.push(postproc[i].votes);
-            colors.push(rgb);
+            if(postproc[i].option.startsWith('Podemos:')){
+            colors.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.startsWith('PP:')){
+                colors.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.startsWith('PSOE:')){
+                colors.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
         }
-
-
 
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext('2d');
