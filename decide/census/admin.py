@@ -5,6 +5,8 @@ from .models import Census
 from voting.models import Voting
 from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 class CensusAdmin(admin.ModelAdmin):
@@ -30,7 +32,7 @@ class CensusAdmin(admin.ModelAdmin):
 
         votings = Voting.objects.all()
 
-        voting_id = obj.voting_ide
+        voting_id = obj.voting_id
 
         if votings:
 
@@ -40,8 +42,8 @@ class CensusAdmin(admin.ModelAdmin):
                     obj.save()
                     break
                  else:
-
-                     return redirect('http://localhost:8000/admin/census/census/')
+                    messages.error(request,'No existing voting')
+                    return HttpResponseRedirect('/admin/')
 
 
 admin.site.register(Census, CensusAdmin)
