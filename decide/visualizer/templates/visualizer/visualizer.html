@@ -65,6 +65,12 @@
          <hr>
          <p class="mb-0">[[ voting.name ]] #[[ voting.id ]] - Comienzo: [[ voting.start_date ]]</p>
        </div>
+       <div v-else-if="!voting.postproc" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-calculator"></i> Votación finalizada</h4>
+         <p>La votación ya ha finalizado y se está realizando el recuento de votos.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]] - Comienzo: [[ voting.start_date ]] - Fin: [[ voting.end_date ]]</p>
+       </div>
 
     <div v-else>
     <main role="main">
@@ -147,12 +153,13 @@
                     <!-- congreso -->
                     <div id="congressCard" class="card card-shadow-2 bg-white mt-4">
                        <a data-toggle="collapse" data-target="#congreso" aria-expanded="true" aria-controls="congreso" class="pointer">
-                          <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Congreso</h5>
+                          <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Gráfica</h5>
                        </a>
                        <div id="congreso" class="collapse show" aria-labelledby="headingCongreso" data-parent="#graphics">
                           <div class="card-body">
-                             <h5 class="card-title">Gráfica de votos del Congreso</h5>
+                             <h5 class="card-title">[[ voting.name ]]</h5>
                              <p class="card-text">
+                                <p>[[ voting.desc ]]</p>
                                  <canvas id="canvas" width="250" height="100"></canvas>
                              </p>
                              <div class="row">
