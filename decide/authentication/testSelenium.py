@@ -17,8 +17,6 @@ class TestSignin(StaticLiveServerTestCase):
 
     def setUp(self):
         self.driver = webdriver.Chrome()
-        self.driver.implicitly_wait(5)
-        self.driver.maximize_window()
 
         u = CustomUser(username='voter1')
         u.set_password('123')
