@@ -217,7 +217,7 @@
                     </button>
                  </div>
                  <div class="modal-body">
-                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block">
+                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block" onclick="printPDF()">
                     <i class="fas fa-file-pdf"></i> PDF</button> 
 
                     <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block" onclick="exportTableToCSV('data.csv')">
@@ -673,6 +673,11 @@
 
         window.onload = checkCookie();
     </script>
+      
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+      
 <script>
     function monocromatico(){
         var coloresmonocromaticos = ["rgb(56,56,56)",
@@ -909,8 +914,14 @@
 
 </script>
 
-
     <script>
+        function printPDF(){
+            $('#exportModal').modal('hide');
+            let doc = new jsPDF('p','pt','a4','landscape');
+            doc.addHTML(document.body,function() {
+                doc.save('decide-dialga-visualizacion.pdf');
+            });
+        }
 
         var voting = {{voting|safe}};
 
