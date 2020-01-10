@@ -97,10 +97,10 @@
                           </a>
                           <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
                              <a class="dropdown-item active" href="#">Desactivado</a>
-                             <a class="dropdown-item" href="#">Monocromático</a>
-                             <a class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
-                             <a class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
-                             <a class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
+                             <a class="dropdown-item" onclick=monocromatico() >Monocromático</a>
+                             <a class="dropdown-item" onclick=deuteranomalia() >Deuteranomalía (rojo-verde)</a>
+                             <a class="dropdown-item" onclick=protanomalia() >Protanomalía (rojo-verde)</a>
+                             <a class="dropdown-item" onclick=tritranomalia() >Tritanomalía (azul-amarillo)</a>
                           </div>
                        </div> 
                     </li>
@@ -344,14 +344,14 @@
             let rgb = "rgb(" + red + "," + green + "," + blue +")";
             labels.push(postproc[i].option);
             datas.push(postproc[i].votes);
-            if(postproc[i].option.startsWith('Podemos:')){
-            colors.push(PodemosPartido[podemosindice]);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
             podemosindice++;
-            }else if(postproc[i].option.startsWith('PP:')){
-                colors.push(PPPartido[ppindice]);
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
                 ppindice++;
-            }else if(postproc[i].option.startsWith('PSOE:')){
-                colors.push(PSOEPartido[psoeindice]);
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
                 psoeindice++;
             }else{
                 colors.push(rgb);
@@ -514,4 +514,64 @@
 
         window.onload = checkCookie();
     </script>
+
+<script>
+    function monocromatico(){
+        var coloresmonocromaticos = ["rgb(56,56,56)",
+    "rgb(101,101,101)",
+    "rgb(146,146,146)",
+    "rgb(188,188,188)",
+    "rgb(65,65,65)",
+    "rgb(110,110,110)",
+    "rgb(153,153,153)",
+    "rgb(197,197,197)",
+    "rgb(74,74,74)",
+    "rgb(119,119,119)",
+    "rgb(162,162,162)",
+    "rgb(206,206,206)",
+    "rgb(83,83,83)",
+    "rgb(128,128,128)",
+    "rgb(171,171,171)",
+    "rgb(215,215,215)",
+    "rgb(92,92,92)",
+    "rgb(137,137,137)",
+    "rgb(180,180,180)",
+    "rgb(224,224,224)"
+]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        for (let i = 0; i < postproc_length; i++) {
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            colorsNew.push(coloresmonocromaticos[i]);
+        }
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+    }
+</script>
+
+
+
 {% endblock %}
