@@ -19,14 +19,20 @@ sudo: required
 services:
   - postgresql
 
+env:
+  - MOZ_HEADLESS=1
+
 addons:
   postgresql: "9.4"
-  chrome: stable
+  firefox: latest
 
 before_install:
-  - wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
-  - unzip chromedriver_linux64.zip -d  /home/travis/virtualenv/python3.6.7/bin/
-  - export CHROME_BIN=chromium-browser
+ - wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
+ - mkdir geckodriver
+ - tar -xzf geckodriver-v0.18.0-linux64.tar.gz -C geckodriver
+ - export PATH=$PATH:$PWD/geckodriver
+ - geckodriver --version
+ - export MOZ_HEADLESS=1
 
 before_script:
   - psql -U postgres -c "create user decide password 'decide'"

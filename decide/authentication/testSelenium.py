@@ -16,10 +16,7 @@ class TestSignin(StaticLiveServerTestCase):
         super(TestSignin, cls).setUpClass()
 
     def setUp(self):
-        self.driver = webdriver.Chrome(
-            executable_path="/home/travis/virtualenv/python3.6.7/bin/chromedriver",
-            desired_capabilities={'javascriptEnabled': True}
-        )
+        self.driver = webdriver.Firefox()
         u = CustomUser(username='voter1')
         u.set_password('123')
         u.save()
