@@ -17,6 +17,7 @@ class TestSignin(StaticLiveServerTestCase):
 
     def setUp(self):
         self.driver = webdriver.Chrome(
+            executable_path="/home/travis/virtualenv/python3.6.7/bin/chromedriver",
             desired_capabilities={'javascriptEnabled': True}
         )
         u = CustomUser(username='voter1')
