@@ -42,6 +42,12 @@
          .bg-dark-mode{
             background-color: #000000;
          }
+         .notification{
+            position:fixed;
+            z-index: 999;
+            top: 1rem;
+            right: 1rem;
+         }
       </style>
 {% endblock %}
 
@@ -549,20 +555,20 @@
                }
                var alertDiv = document.createElement("div");
                alertDiv.setAttribute("id","alertDarkMode");
-		         alertDiv.setAttribute("class","alert alert-success alert-dimissible fade show");
+		         alertDiv.setAttribute("class","alert alert-success alert-dimissible fade show card-shadow-3 w-50 notification");
 		         alertDiv.setAttribute("role","alert");
-		         alertDiv.innerHTML = "Modo oscuro activado";
+		         alertDiv.innerHTML = "Modo oscuro <b>activado</b>";
                var buttonClose = document.createElement("button");
                buttonClose.setAttribute("type", "button");
                buttonClose.setAttribute("class", "close");
-               buttonClose.setAttribute("data-dimiss", "alert");
+               buttonClose.setAttribute("data-dismiss", "alert");
                buttonClose.setAttribute("aria-label", "Close");
                var span = document.createElement("span");
                span.setAttribute("aria-hidden", "true");
                span.innerHTML = "&times;";
                buttonClose.appendChild(span);
                alertDiv.appendChild(buttonClose);
-               document.getElementById('topCard').appendChild(alertDiv);
+               document.body.appendChild(alertDiv);
                setTimeout("deleteAlert('dark')", 8000);
             } else if (mode=="light" && document.body.className == "bg-dark-mode") {
                if (document.contains(document.getElementById("alertDarkModeDes"))) {
@@ -573,20 +579,20 @@
                }
                var alertDiv = document.createElement("div");
                alertDiv.setAttribute("id","alertDarkModeDes");
-		         alertDiv.setAttribute("class","alert alert-success alert-dimissible fade show");
+		         alertDiv.setAttribute("class","alert alert-secondary alert-dimissible fade show card-shadow-3 w-50 notification");
 		         alertDiv.setAttribute("role","alert");
-		         alertDiv.innerHTML = "Modo oscuro desactivado";
+		         alertDiv.innerHTML = "Modo oscuro <b>desactivado</b>";
                var buttonClose = document.createElement("button");
                buttonClose.setAttribute("type", "button");
                buttonClose.setAttribute("class", "close");
-               buttonClose.setAttribute("data-dimiss", "alert");
+               buttonClose.setAttribute("data-dismiss", "alert");
                buttonClose.setAttribute("aria-label", "Close");
                var span = document.createElement("span");
                span.setAttribute("aria-hidden", "true");
                span.innerHTML = "&times;";
                buttonClose.appendChild(span);
                alertDiv.appendChild(buttonClose);
-               document.getElementById('topCard').appendChild(alertDiv);
+               document.body.appendChild(alertDiv);
                setTimeout("deleteAlert('light')", 8000);
             }
          }
