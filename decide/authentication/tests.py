@@ -1,6 +1,9 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework.test import APITestCase
+from django.test.client import Client, RequestFactory
+from django.urls import reverse
+from django.contrib.auth.models import AnonymousUser
 
 #from django.contrib.auth.models import User
 from .models import CustomUser
