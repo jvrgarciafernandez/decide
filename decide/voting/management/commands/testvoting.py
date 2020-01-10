@@ -35,7 +35,8 @@ class Command(BaseCommand):
         v.save()
 
         a, _ = Auth.objects.get_or_create(url=settings.BASEURL,
-                                          defaults={'me': True, 'name': 'test auth'})
+                                          defaults={'me': True,
+                                           'name': 'test auth'})
         a.save()
         v.auths.add(a)
 
@@ -43,7 +44,8 @@ class Command(BaseCommand):
 
     def create_voters(self, v):
         for i in range(100):
-            u, _ = User.objects.get_or_create(username='testvoter{}'.format(i))
+            u, _ = User.objects.get_or_create(
+                username='testvoter{}'.format(i))
             u.is_active = True
             u.save()
             c = Census(voter_id=u.id, voting_id=v.id)
@@ -88,9 +90,11 @@ class Command(BaseCommand):
 
         print("Result:")
         for q in v.question.options.all():
-            print(" * {}: {} tally votes / {} emitted votes".format(q, tally.get(q.number, 0), clear.get(q.number, 0)))
+            print(" * {}: {} tally votes / {} emitted votes".format(
+                q, tally.get(q.number, 0), clear.get(q.number, 0)))
 
         print("")
         print("Postproc Result:")
         for q in v.postproc:
-            print(" * {}: {} postproc / {} votes".format(q["option"], q["postproc"], q["votes"]))
+            print(" * {}: {} postproc / {} votes".format(q["option"],
+             q["postproc"], q["votes"]))
