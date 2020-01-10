@@ -203,9 +203,11 @@ class AuthTestCase(APITestCase):
         from .views import signup
         duplicate = False
         try:
-            resp = signup(request)
+            signup(request)
         except Exception as exception:
             duplicate = True
+
+        print(duplicate)
 
 
 
