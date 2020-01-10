@@ -24,7 +24,9 @@ addons:
   chrome: stable
 
 before_install:
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=8000 http://localhost &
+  - wget http://chromedriver.storage.googleapis.com/2.24/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip -d /home/travis/virtualenv/python2.7.12/bin/
+  - export CHROME_BIN=chromium-browser
 
 before_script:
   - psql -U postgres -c "create user decide password 'decide'"
