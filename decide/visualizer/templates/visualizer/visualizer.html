@@ -396,6 +396,12 @@
         }
 
         let datas = [ppVotes, psoeVotes, podemosVotes, otrosVotes];
+        let newLabels = []
+        for (let i = 0; i < labels.length; i++) {
+            let concateichon = labels[i] + ": " + datas[i] + " votos";
+            console.log(concateichon)
+            newLabels.push(concateichon);
+        }
 
         colors.splice(-1, 1);
         colors.push("#c1c1c1");
@@ -409,7 +415,7 @@
         let graph = new Chart(context, {
             type: graphType,
             data: {
-                labels: labels,
+                labels: newLabels,
                 datasets: [{
                     backgroundColor: colors,
                     data: datas
