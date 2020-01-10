@@ -39,80 +39,69 @@
          }
          .card-shadow-3{ box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
          }
+         .bg-dark-mode{
+            background-color: #000000;
+         }
+         .notification{
+            position:fixed;
+            z-index: 999;
+            top: 1rem;
+            right: 1rem;
+         }
       </style>
 {% endblock %}
 
 {% block content %}
     <div id="app-visualizer">
-        <!-- Navbar -->
-        <b-navbar type="dark" variant="secondary">
-            <b-navbar-brand tag="h1">Decide</b-navbar-brand>
-            <button type="button" class="btn btn-dark" onclick="activateDarkMode()">Modo oscuro</button>
-            <button type="button" class="btn btn-light" onclick="activateLightMode()">Modo claro</button>
-        </b-navbar>
+      <div v-if="!voting.start_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-calendar-plus"></i> Votación no comenzada</h4>
+         <p>La votación actualmente no ha comenzado, visite de nuevo esta página para realizar la votación cuando haya comenzado.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]]</p>
+       </div>
+      <div v-else-if="!voting.end_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-cog fa-spin"></i> Votación en curso</h4>
+         <p>La votación actualmente sigue en curso, los datos estarán disponibles una vez finalice.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]] - Comienzo: [[ voting.start_date ]]</p>
+       </div>
 
-        <!-- OLD DATA, deprecated
-         <div id="divId1" class="voting container">
-            <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
-
-            <h2 v-if="!voting.start_date">Votación no comenzada</h2>
-            <h2 v-else-if="!voting.end_date">Votación en curso</h2>
-            <div v-else>
-                <h2 class="heading">Resultados:</h2>
-                <table id="tableVoting" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Opción</th>
-                            <th>Puntuación</th>
-                            <th>Votos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="opt in voting.postproc" :key="opt.number">
-                            <th>[[opt.option]]</th>
-                            <td>[[opt.postproc]]</td>
-                            <td>[[opt.votes]]</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
-    
-
+    <div v-else>
     <main role="main">
         <div class="container mt-4">
-           <div class="card card-shadow-2 bg-white">
+           <div id="topCard" class="card card-shadow-2 bg-white">
               <div class="card-body text-center">
                  <ul class="nav">
-                    <li class="nav-item d-flex justify-content-start">
+                    <li class="nav-item d-flex justify-content-start mb-2 mr-2">
                         <div class="text-info mr-1 pointer" data-container="body" data-toggle="popover" data-placement="bottom" 
                              data-content="Si posee una discapacidad de la visión de los colores utilice los ajustes 
                         ofrecidos para que obtenga una correcta visualización de los gráficos. 
                                            Si no conoce que tipo de Discromatopsia padece, pruebe los distintos ajustes hasta comprobar que distingue
                         todos los colores."><i class="far fa-lg fa-question-circle" style="line-height:1.5"></i></div>
                        <div class="dropdown">
-                          <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" 
+                          <a id="daltonicButton" class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" 
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Simular espacio de color
                           </a>
-                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a class="dropdown-item active" href="#">Desactivado</a>
-                             <a class="dropdown-item" onclick=monocromatico() >Monocromático</a>
-                             <a class="dropdown-item" onclick=deuteranomalia() >Deuteranomalía (rojo-verde)</a>
-                             <a class="dropdown-item" onclick=protanomalia() >Protanomalía (rojo-verde)</a>
-                             <a class="dropdown-item" onclick=tritranomalia() >Tritanomalía (azul-amarillo)</a>
+                          <div id="dropDownColors" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                             <a id="dropDownColors1" class="dropdown-item active" href="#">Desactivado</a>
+                             <a id="dropDownColors2" class="dropdown-item" href="#">Monocromático</a>
+                             <a id="dropDownColors3" class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
+                             <a id="dropDownColors4" class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
+                             <a id="dropDownColors5" class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
                           </div>
                        </div> 
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mb-2">
                        <div class="dropdown">
-                          <a class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
+
+                          <a id="darkModeButton" class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Modo oscuro
                           </a>
-                          <div class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a class="dropdown-item active" href="#">Desactivado</a>
-                             <a class="dropdown-item" href="#">Activado</a>
+                          <div id="dropDownDarkMode" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
+                           <a id="activeDarkModeButton" class="dropdown-item" href="#" onclick="alertDarkMode('dark'); activateDarkMode()">Activado</a>
+                           <a id="activeLightModeButton" class="dropdown-item active" href="#" onclick="alertDarkMode('light'); activateLightMode()">Desactivado</a>
                           </div>
                        </div>
                     </li>
@@ -121,7 +110,7 @@
            </div>
            <div class="row">
               <div class="col-sm">
-                 <div class="card card-shadow-2 bg-white mt-4">
+                 <div id="optionsNumberCard" class="card card-shadow-2 bg-white mt-4">
                     <div class="card-body">
                        <h6 class="card-title text-muted" >Nº DE OPCIONES</h6>
                        <h3 class="card-text text-center mb-3">[[ voting.postproc.length ]]</h3>
@@ -129,7 +118,7 @@
                  </div>
               </div>
               <div class="col-sm">
-                 <div class="card card-shadow-2 bg-white mt-4">
+                 <div id="votesNumberCard" class="card card-shadow-2 bg-white mt-4">
                     <div class="card-body">
                        <h6 class="card-title text-muted">Nº DE VOTOS</h6>
                        <h3 id="total_votes" class="card-text text-center mb-3">0</h3>
@@ -137,7 +126,7 @@
                  </div>
               </div>
               <div class="col-sm">
-               <div class="card card-shadow-2 bg-white mt-4">
+               <div id="beginCard" class="card card-shadow-2 bg-white mt-4">
                   <div class="card-body">
                    <h6 class="card-title text-muted">COMIENZO</h6>
                    <h3 id="start_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
@@ -145,7 +134,7 @@
                </div>
             </div>
               <div class="col-sm">
-                 <div class="card card-shadow-2 bg-white mt-4">
+                 <div id="finishCard" class="card card-shadow-2 bg-white mt-4">
                     <div class="card-body">
                        <h6 class="card-title text-muted">FINALIZACIÓN</h6>
                        <h3 id="end_date" class="card-text text-center mb-3">DD/MM/YYYY</h3>
@@ -157,7 +146,7 @@
               <div class="col-sm">
                  <div class="accordion" id="graphics">
                     <!-- congreso -->
-                    <div class="card card-shadow-2 bg-white mt-4">
+                    <div id="congressCard" class="card card-shadow-2 bg-white mt-4">
                        <a data-toggle="collapse" data-target="#congreso" aria-expanded="true" aria-controls="congreso" class="pointer">
                           <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Congreso</h5>
                        </a>
@@ -166,16 +155,9 @@
                              <h5 class="card-title">Gráfica de votos del Congreso</h5>
                              <p class="card-text">
                                  <canvas id="canvas" width="250" height="100"></canvas>
-                                 <label>
-                                     <select class="changeGraph" onchange="changeTypeChartJsGraph();">
-                                         <option value="pie" selected>Circular (tarta)</option>
-                                         <option value="bar">Diagrama de barras verticales</option>
-                                         <option value="polarArea">Area polar</option>
-                                         <option value="doughnut">Rosquilla</option>
-                                         <option value="horizontalBar">Diagrama de barras horizontales</option>
-                                     </select>
-                                 </label>
                              </p>
+                             <div class="row">
+                              <div class="col-sm">
                              <div class="btn-group" role="group" aria-label="senado-actions">
                                 <button type="button" class="btn btn-secondary v-aling" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-export"></i> <span>Exportar</span>
@@ -184,6 +166,20 @@
                                 <i class="fas fa-share-alt"></i> <span>Compartir</span>
                                 </button>
                              </div>
+                            </div>
+                            <div class="col-sm">
+                             <form class="form-inline">
+                             <label class="mr-sm-2 ml-sm-2 text-dark" for="changeGraph">Tipo de gráfica</label>
+                                     <select class="custom-select mr-sm-2 bg-white text-dark" id="changeGraph" onchange="changeTypeChartJsGraph();">
+                                         <option value="pie" selected>Circular (tarta)</option>
+                                         <option value="bar">Diagrama de barras verticales</option>
+                                         <option value="polarArea">Area polar</option>
+                                         <option value="doughnut">Rosquilla</option>
+                                         <option value="horizontalBar">Diagrama de barras horizontales</option>
+                                     </select>
+                                     </form>
+                                     </div>
+                            </div>
                           </div>
                        </div>
                     </div>
@@ -214,17 +210,18 @@
         <!-- Export Modal -->
         <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-labelledby="export" aria-hidden="true">
            <div class="modal-dialog" role="document">
-              <div class="modal-content">
+              <div id="exportDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">import_export</i> Exportar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="closeExport" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
                  <div class="modal-body">
-                    <button type="button" class="btn btn-outline-primary btn-block">
+                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block">
                     <i class="fas fa-file-pdf"></i> PDF</button> 
-                    <button type="button" class="btn btn-outline-success btn-block">
+
+                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block" onclick="exportTableToCSV('data.csv')">
                     <i class="fas fa-file-csv"></i> CSV</button>
                  </div>
                  <div class="modal-footer">
@@ -236,15 +233,44 @@
         <!-- Share Modal -->
         <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="share" aria-hidden="true">
            <div class="modal-dialog" role="document">
-              <div class="modal-content">
+              <div id="shareDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">share</i> Compartir</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="closeShare" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
                  <div class="modal-body">
-                    Botones para las distintas redes sociales....
+                  <div class="container">
+                     <div class="row">
+                       <div class="col-sm-3">
+                        <button id="facebook-share" type="button" class="btn btn-link">
+                        <i class="fab fa-facebook-f"></i> Facebook</button>
+                       
+                        <button id="linkedin-share" type="button" class="btn btn-link">
+                        <i class="fab fa-linkedin-in"></i> Linkedin</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="twitter-share" type="button" class="btn btn-link">
+                        <i class="fab fa-twitter"></i> Twitter</button>
+                        <button id="reddit-share" type="button" class="btn btn-link">
+                           <i class="fab fa-reddit"></i> Reddit</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="email-share" type="button" class="btn btn-link">
+                        <i class="fas fa-envelope"></i> Email</button>
+
+                        <button id="slack-share" type="button" class="btn btn-link">
+                        <i class="fab fa-slack-hash"></i> &nbsp;&nbsp;Slack</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="telegram-share" type="button" class="btn btn-link">
+                           <i class="fab fa-telegram"></i> Telegram</button>
+   
+                        <button id="whatsapp-share" type="button" class="btn btn-link">
+                        <i class="fab fa-whatsapp"></i> Whatsapp</button>
+                     </div>
+                  </div>
                  </div>
                  <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -253,11 +279,12 @@
            </div>
         </div>
      </main>
+     </div>
      <footer class="mt-5 mb-3">
         <div class="container">
-           <div class="card card-shadow-2 bg-white">
+           <div id="footerVis" class="card card-shadow-2 bg-white">
               <div class="card-body text-center">Visualización de datos de la plataforma de votación digital 
-                <a href="https://getbootstrap.com/">Decide Dialga</a>, por el grupo <a href="https://twitter.com/mdo">Dialga-Visualizer</a>.</div>
+                <a href="https://github.com/decide-dialga/decide/">Decide-Dialga</a>, por el grupo <a href="https://github.com/orgs/decide-dialga/teams/decide-dialga-visualizer">Dialga-Visualizer</a>.</div>
            </div>
         </div>
      </footer>
@@ -282,7 +309,13 @@
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
     <script>
         document.getElementsByTagName("body")[0].className = "bg-light";
-        
+
+        Date.prototype.getFullMinutes = function () {
+        if (this.getMinutes() < 10) {
+            return '0' + this.getMinutes();
+        }
+        return this.getMinutes();
+        };
         
         $(function () {
             $('[data-toggle="popover"]').popover()
@@ -314,9 +347,9 @@
 
         voting.end_date = new Date(voting.end_date);
         voting.start_date = new Date(voting.start_date);
-        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getMinutes()+" "+voting.start_date.getDate()+"/"
+        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getFullMinutes()+" "+voting.start_date.getDate()+"/"
           +(voting.start_date.getMonth()+1)+"/"+voting.start_date.getFullYear();
-        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getMinutes()+" "+voting.end_date.getDate()+"/"
+        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getFullMinutes()+" "+voting.end_date.getDate()+"/"
           +(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
         document.getElementById("total_votes").innerText = getTotalVotes();
 
@@ -382,8 +415,8 @@
 
         //Function to change the type of the chartjs graph
         function changeTypeChartJsGraph() {
-            let option = document.getElementsByClassName("changeGraph");
-            graphType = option[0].value;
+            let option = document.getElementById("changeGraph");
+            graphType = option.value;
             graph.destroy();
 
             if(graphType === 'horizontalBar') {
@@ -470,51 +503,160 @@
             today.setTime(today.getTime() + (expiresDays * 24 * 60 * 60 * 1000));
             var expires = "expires=" + today.toGMTString();
             document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
-        }
+         }
 
-        function getCookie(cookieName) {
+         function getCookie(cookieName) {
             var name = cookieName + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
             var cookies = decodedCookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
-                var c = cookies[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
+               var c = cookies[i];
+               while (c.charAt(0) == ' ') {
+                  c = c.substring(1);
+               }
+               if (c.indexOf(name) == 0) {
+                  return c.substring(name.length, c.length);
+               }
             }
             return "";
-        }
+         }
 
-        function checkCookie() {
+         function checkCookie() {
             var activatedTheme = getCookie("theme");
 
             if (activatedTheme == "dark") {
-                activateDarkMode();
+               activateDarkMode();
             }
-        }
+         }
 
-        function activateDarkMode() {
-            document.body.className = "bg-dark";
-            // Lines below are deprecated
-            //document.getElementById("divId1").style.color = "#ffffff";
-            //document.getElementById("tableVoting").style.color = "#ffffff";
+         function activateDarkMode() {
+            changeSelectorDarkMode("dark");
+            document.body.className = "bg-dark-mode";
+            document.getElementById("topCard").className = "card card-shadow-2 bg-dark";
+            document.getElementById("optionsNumberCard").className = "card card-shadow-2 bg-dark text-white mt-4";
+            document.getElementById("votesNumberCard").className = "card card-shadow-2 bg-dark text-white mt-4";
+            document.getElementById("beginCard").className = "card card-shadow-2 bg-dark text-white mt-4";
+            document.getElementById("finishCard").className = "card card-shadow-2 bg-dark text-white mt-4";
+            document.getElementById("congressCard").className = "card card-shadow-2 mt-4 text-white bg-dark";
+            document.getElementById("footerVis").className = "card card-shadow-2 text-white bg-dark";
+            document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-light dropdown-toggle";
+            document.getElementById("darkModeButton").className = "btn btn-sm btn-outline-info dropdown-toggle ml-2";
+            document.getElementById("exportDiv").className = "modal-content text-white bg-dark";
+            document.getElementById("buttonPDF").className = "btn btn-primary btn-block";
+            document.getElementById("buttonCSV").className = "btn btn-success btn-block";
+            document.getElementById("shareDiv").className = "modal-content text-white bg-dark";
+            document.getElementById("dropDownColors").className = "dropdown-menu card-shadow-3 bg-dark";
+            document.getElementById("dropDownColors1").className + "dropdown-item activate text-white";
+            document.getElementById("dropDownColors2").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors3").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors4").className = "dropdown-item text-white";
+            document.getElementById("dropDownColors5").className = "dropdown-item text-white";
+            document.getElementById("closeExport").className = "close text-white";
+            document.getElementById("closeShare").className = "close text-white";
             setCookie("theme", "dark", 365);
-        }
+         }
 
-        function activateLightMode() {
+         function activateLightMode() {
+            changeSelectorDarkMode("light");
             document.body.className = "bg-light";
-            // Lines below are deprecated
-            //document.getElementById("divId1").style.color = "#212529";
-            //document.getElementById("tableVoting").style.color = "#212529";
+            document.getElementById("topCard").className = "card card-shadow-2 bg-white";
+            document.getElementById("optionsNumberCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("votesNumberCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("beginCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("finishCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("congressCard").className = "card card-shadow-2 bg-white mt-4";
+            document.getElementById("footerVis").className = "card card-shadow-2 bg-white";
+            document.getElementById("daltonicButton").className = "btn btn-sm btn-outline-secondary dropdown-toggle";
+            document.getElementById("darkModeButton").className = "btn btn-sm btn-dark dropdown-toggle ml-2";
+            document.getElementById("exportDiv").className = "modal-content";
+            document.getElementById("buttonPDF").className = "btn btn-outline-primary btn-block";
+            document.getElementById("buttonCSV").className = "btn btn-outline-success btn-block";
+            document.getElementById("shareDiv").className = "modal-content";
+            document.getElementById("dropDownColors").className = "dropdown-menu card-shadow-3";
+            document.getElementById("dropDownColors1").className + "dropdown-item activate";
+            document.getElementById("dropDownColors2").className = "dropdown-item";
+            document.getElementById("dropDownColors3").className = "dropdown-item";
+            document.getElementById("dropDownColors4").className = "dropdown-item";
+            document.getElementById("dropDownColors5").className = "dropdown-item";
+            document.getElementById("closeExport").className = "close";
+            document.getElementById("closeShare").className = "close";
             setCookie("theme", "light", 365);
-        }
+         }
+
+         function changeSelectorDarkMode(mode) {
+            if (mode == "dark") {
+               document.getElementById("activeDarkModeButton").className = "dropdown-item texte-white active";
+               document.getElementById("activeLightModeButton").className = "dropdown-item text-white";
+               document.getElementById("dropDownDarkMode").className = "dropdown-menu card-shadow-3 bg-dark";
+            } else {
+               document.getElementById("activeDarkModeButton").className = "dropdown-item";
+               document.getElementById("activeLightModeButton").className = "dropdown-item active";
+               document.getElementById("dropDownDarkMode").className = "dropdown-menu card-shadow-3 dropdown";
+            }
+         }
+
+         function alertDarkMode(mode) {
+            if (mode=="dark" && document.body.className == "bg-light") {
+               if (document.contains(document.getElementById("alertDarkModeDes"))) {
+                  document.getElementById("alertDarkModeDes").remove();  
+               }
+               if (document.contains(document.getElementById("alertDarkMode"))) {
+                  document.getElementById("alertDarkMode").remove();  
+               }
+               var alertDiv = document.createElement("div");
+               alertDiv.setAttribute("id","alertDarkMode");
+		         alertDiv.setAttribute("class","alert alert-success alert-dimissible fade show card-shadow-3 w-50 notification");
+		         alertDiv.setAttribute("role","alert");
+		         alertDiv.innerHTML = "Modo oscuro <b>activado</b>";
+               var buttonClose = document.createElement("button");
+               buttonClose.setAttribute("type", "button");
+               buttonClose.setAttribute("class", "close");
+               buttonClose.setAttribute("data-dismiss", "alert");
+               buttonClose.setAttribute("aria-label", "Close");
+               var span = document.createElement("span");
+               span.setAttribute("aria-hidden", "true");
+               span.innerHTML = "&times;";
+               buttonClose.appendChild(span);
+               alertDiv.appendChild(buttonClose);
+               document.body.appendChild(alertDiv);
+               setTimeout("deleteAlert('dark')", 8000);
+            } else if (mode=="light" && document.body.className == "bg-dark-mode") {
+               if (document.contains(document.getElementById("alertDarkModeDes"))) {
+                  document.getElementById("alertDarkModeDes").remove();  
+               }
+               if (document.contains(document.getElementById("alertDarkMode"))) {
+                  document.getElementById("alertDarkMode").remove();  
+               }
+               var alertDiv = document.createElement("div");
+               alertDiv.setAttribute("id","alertDarkModeDes");
+		         alertDiv.setAttribute("class","alert alert-secondary alert-dimissible fade show card-shadow-3 w-50 notification");
+		         alertDiv.setAttribute("role","alert");
+		         alertDiv.innerHTML = "Modo oscuro <b>desactivado</b>";
+               var buttonClose = document.createElement("button");
+               buttonClose.setAttribute("type", "button");
+               buttonClose.setAttribute("class", "close");
+               buttonClose.setAttribute("data-dismiss", "alert");
+               buttonClose.setAttribute("aria-label", "Close");
+               var span = document.createElement("span");
+               span.setAttribute("aria-hidden", "true");
+               span.innerHTML = "&times;";
+               buttonClose.appendChild(span);
+               alertDiv.appendChild(buttonClose);
+               document.body.appendChild(alertDiv);
+               setTimeout("deleteAlert('light')", 8000);
+            }
+         }
+
+         function deleteAlert(mode) {
+               if (mode == "dark" && document.contains(document.getElementById("alertDarkMode"))) {
+                  document.getElementById("alertDarkMode").remove();
+               } else if (document.contains(document.getElementById("alertDarkModeDes"))) {
+                  document.getElementById("alertDarkModeDes").remove();
+               }
+         }
 
         window.onload = checkCookie();
     </script>
-
 <script>
     function monocromatico(){
         var coloresmonocromaticos = ["rgb(56,56,56)",
@@ -752,5 +894,217 @@
 </script>
 
 
+    <script>
 
+        var voting = {{voting|safe}};
+
+        function getTotalVotes(){
+           var res = 0
+           for (var i = 0; i < voting.postproc.length; i++) {
+              res += voting.postproc[i]["votes"]
+           }
+           return res;
+        }
+
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            // fichero CSV
+            csvFile = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+
+            // link de descarga y codificación
+            downloadLink = document.createElement("a");
+            var encodedUri = encodeURI(csvFile)
+            downloadLink.setAttribute("href", encodedUri)
+
+            // nombre del fichero
+            downloadLink.download = filename;
+
+            // Crear un link al archivo
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            // Ocultar link de descarga
+            downloadLink.style.display = "none";
+
+            // Añadir el link al DOM
+            document.body.appendChild(downloadLink);
+
+            // Click al link de descarga
+            downloadLink.click();
+        }
+
+        function exportTableToCSV(filename) {
+            var tableHeaders = ["Votacion", "Comienzo", "Fin", "Votos"];
+            var csv = new Array()
+
+            var name = voting.name
+            var start_date = new Date(voting.start_date);
+            var end_date = new Date(voting.end_date);
+            var total_votes = getTotalVotes();
+
+            csv.push(tableHeaders[0]+":"+name)
+            csv.push(tableHeaders[1]+":"+start_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[2]+":"+end_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[3]+":"+total_votes)
+
+            for (let i=0; i< voting.postproc.length; i++) {
+                csv.push("Opcion "  + voting.postproc[i].option + ": " + voting.postproc[i].votes)
+            }
+            
+            // Descarga del fichero CSV
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+    </script>
+
+   <!-- SCRIPTS PARA COMPARTIR EN REDES SOCIALES -->    
+    <script>
+      
+      // URIs
+      var FACEBOOK_ENDPOINT = 'https://www.facebook.com/sharer/sharer.php?u=';
+      var LINKEDIN_ENDPOINT = 'https://www.linkedin.com/shareArticle?mini=true';
+      var TWITTER_ENDPOINT  = 'https://twitter.com/intent/tweet?';
+      var REDDIT_ENDPOINT   = 'https://www.reddit.com/submit?';
+      var MAIL_ENDPOINT     = 'mailto:?';
+      var SLACK_ENDPOINT    = '';
+      var TELEGRAM_ENDPOINT = 'https://t.me/share/url?';
+      var WHATSAPP_ENDPOINT = 'https://api.whatsapp.com/send?';
+    
+      // BOTONES
+      var boton_facebook = document.querySelector("#facebook-share");
+      var boton_linkedin = document.querySelector("#linkedin-share");
+      var boton_twitter  = document.querySelector("#twitter-share");
+      var boton_reddit   = document.querySelector("#reddit-share");
+      var boton_email    = document.querySelector("#email-share");
+      var boton_slack    = document.querySelector("#slack-share");
+      var boton_telegram = document.querySelector("#telegram-share");
+      var boton_whatsapp = document.querySelector("#whatsapp-share");
+
+      // CLASES
+      var in_mouse = "btn btn-outline-success";
+      var out_mouse_1 = "btn-outline-success";
+      var out_mouse_2 = "btn-link";
+
+      // FACEBOOK
+      boton_facebook.addEventListener('mouseover', ()=>{
+         boton_facebook.className = in_mouse;
+      });
+
+      boton_facebook.addEventListener('mouseout', ()=>{
+         boton_facebook.classList.remove(out_mouse_1);
+         boton_facebook.classList.add(out_mouse_2);
+      });
+
+      boton_facebook.addEventListener('click', ()=>{
+         window.open(FACEBOOK_ENDPOINT + window.location.href);
+      });
+
+      // LINKEDIN
+      boton_linkedin.addEventListener('mouseover', ()=>{
+         boton_linkedin.className = in_mouse;
+      });
+
+      boton_linkedin.addEventListener('mouseout', ()=>{
+         boton_linkedin.classList.remove(out_mouse_1);
+         boton_linkedin.classList.add(out_mouse_2);
+      });//%s%s
+      boton_linkedin.addEventListener('click', ()=>{
+         window.open(LINKEDIN_ENDPOINT + '&title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // TWITTER
+      boton_twitter.addEventListener('mouseover', ()=>{
+         boton_twitter.className = in_mouse;
+      });
+
+      boton_twitter.addEventListener('mouseout', ()=>{
+         boton_twitter.classList.remove(out_mouse_1);
+         boton_twitter.classList.add(out_mouse_2);
+      });
+      
+      boton_twitter.addEventListener('click', ()=>{
+         window.open(TWITTER_ENDPOINT + 'original_referer=' + 
+         window.location.href + '&text=' + 
+         document.querySelector("h5.card-title").innerHTML + '&tw_p=tweetbutton' 
+         + '&url=' + window.location.href);
+      });
+
+      // REDDIT
+      boton_reddit.addEventListener('mouseover', ()=>{
+         boton_reddit.className = in_mouse;
+      });
+
+      boton_reddit.addEventListener('mouseout', ()=>{
+         boton_reddit.classList.remove(out_mouse_1);
+         boton_reddit.classList.add(out_mouse_2);
+      });
+
+      boton_reddit.addEventListener('click', ()=>{
+         window.open(REDDIT_ENDPOINT + 'title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // EMAIL
+      boton_email.addEventListener('mouseover', ()=>{
+         boton_email.className = in_mouse;
+      });
+
+      boton_email.addEventListener('mouseout', ()=>{
+         boton_email.classList.remove(out_mouse_1);
+         boton_email.classList.add(out_mouse_2);
+      });
+
+      boton_email.addEventListener('click', ()=>{
+         window.open(MAIL_ENDPOINT + 'subject=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&body=' + window.location.href);
+      });
+
+      // SLACK
+      boton_slack.addEventListener('mouseover', ()=>{
+         boton_slack.className = in_mouse;
+      });
+
+      boton_slack.addEventListener('mouseout', ()=>{
+         boton_slack.classList.remove(out_mouse_1);
+         boton_slack.classList.add(out_mouse_2);
+      });
+
+      // TELEGRAM
+      boton_telegram.addEventListener('mouseover', ()=>{
+         boton_telegram.className = in_mouse;
+      });
+
+      boton_telegram.addEventListener('mouseout', ()=>{
+         boton_telegram.classList.remove(out_mouse_1);
+         boton_telegram.classList.add(out_mouse_2);
+      });
+
+      boton_telegram.addEventListener('click', ()=>{
+         window.open(TELEGRAM_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // WHATSAPP
+      boton_whatsapp.addEventListener('mouseover', ()=>{
+         boton_whatsapp.className = in_mouse;
+      });
+
+      boton_whatsapp.addEventListener('mouseout', ()=>{
+         boton_whatsapp.classList.remove(out_mouse_1);
+         boton_whatsapp.classList.add(out_mouse_2);
+      });
+
+      boton_whatsapp.addEventListener('click', ()=>{
+         window.open(WHATSAPP_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + ' ' 
+         + window.location.href )
+      });
+
+    </script>
 {% endblock %}
