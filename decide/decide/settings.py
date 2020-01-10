@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     # Apps needed fod SocialAuth branch
     'django.contrib.sites',
+    #'core',
     # This apps we will need for allauth apirest responses
     'rest_auth',
     'rest_auth.registration',
@@ -55,6 +56,12 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.facebook',
+
+
+
+
+   # 'social_core.backends.facebook.FacebookOAuth2',
     #################################################
 ]
 
