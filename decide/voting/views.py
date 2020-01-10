@@ -100,8 +100,7 @@ class VotingUpdate(generics.RetrieveUpdateDestroyAPIView):
 
                 msg = 'Voting tallied'
 
-        elif action == 'deleteAll':
-            votes = voting.get_votes(request.auth.key)
+       
 
 
 

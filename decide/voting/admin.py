@@ -29,7 +29,7 @@ def tally(ModelAdmin, request, queryset):
 
 def deleteAll(ModelAdmin, request, queryset):
     for v in queryset:
-        token = request.session.get('auth-token', '')
+       
         votes = Vote.objects.all()
 
 
