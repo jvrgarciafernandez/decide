@@ -47,45 +47,12 @@
 
 {% block content %}
     <div id="app-visualizer">
-        <!-- Navbar -->
-        <b-navbar type="dark" variant="secondary">
-            <b-navbar-brand tag="h1">Decide</b-navbar-brand>
-        </b-navbar>
-
-        <!-- OLD DATA, deprecated
-         <div id="divId1" class="voting container">
-            <h1>[[ voting.id ]] - [[ voting.name ]]</h1>
-
-            <h2 v-if="!voting.start_date">Votación no comenzada</h2>
-            <h2 v-else-if="!voting.end_date">Votación en curso</h2>
-            <div v-else>
-                <h2 class="heading">Resultados:</h2>
-                <table id="tableVoting" class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>Opción</th>
-                            <th>Puntuación</th>
-                            <th>Votos</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="opt in voting.postproc" :key="opt.number">
-                            <th>[[opt.option]]</th>
-                            <td>[[opt.postproc]]</td>
-                            <td>[[opt.votes]]</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>-->
-    
-
     <main role="main">
         <div class="container mt-4">
            <div class="card card-shadow-2 bg-white">
               <div id="topCard" class="card-body text-center">
                  <ul class="nav">
-                    <li class="nav-item d-flex justify-content-start">
+                    <li class="nav-item d-flex justify-content-start mb-2 mr-2">
                         <div class="text-info mr-1 pointer" data-container="body" data-toggle="popover" data-placement="bottom" 
                              data-content="Si posee una discapacidad de la visión de los colores utilice los ajustes 
                         ofrecidos para que obtenga una correcta visualización de los gráficos. 
@@ -105,8 +72,9 @@
                           </div>
                        </div> 
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mb-2">
                        <div class="dropdown">
+
                           <a id="darkModeButton" class="btn btn-sm btn-dark dropdown-toggle ml-2" href="#" role="button" 
                              id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                           Modo oscuro
@@ -167,16 +135,9 @@
                              <h5 class="card-title">Gráfica de votos del Congreso</h5>
                              <p class="card-text">
                                  <canvas id="canvas" width="250" height="100"></canvas>
-                                 <label>
-                                     <select class="changeGraph" onchange="changeTypeChartJsGraph();">
-                                         <option value="pie" selected>Circular (tarta)</option>
-                                         <option value="bar">Diagrama de barras verticales</option>
-                                         <option value="polarArea">Area polar</option>
-                                         <option value="doughnut">Rosquilla</option>
-                                         <option value="horizontalBar">Diagrama de barras horizontales</option>
-                                     </select>
-                                 </label>
                              </p>
+                             <div class="row">
+                              <div class="col-sm">
                              <div class="btn-group" role="group" aria-label="senado-actions">
                                 <button type="button" class="btn btn-secondary v-aling" data-toggle="modal" data-target="#exportModal">
                                 <i class="fas fa-file-export"></i> <span>Exportar</span>
@@ -185,6 +146,20 @@
                                 <i class="fas fa-share-alt"></i> <span>Compartir</span>
                                 </button>
                              </div>
+                            </div>
+                            <div class="col-sm">
+                             <form class="form-inline">
+                             <label class="mr-sm-2 ml-sm-2 text-dark" for="changeGraph">Tipo de gráfica</label>
+                                     <select class="custom-select mr-sm-2 bg-white text-dark" id="changeGraph" onchange="changeTypeChartJsGraph();">
+                                         <option value="pie" selected>Circular (tarta)</option>
+                                         <option value="bar">Diagrama de barras verticales</option>
+                                         <option value="polarArea">Area polar</option>
+                                         <option value="doughnut">Rosquilla</option>
+                                         <option value="horizontalBar">Diagrama de barras horizontales</option>
+                                     </select>
+                                     </form>
+                                     </div>
+                            </div>
                           </div>
                        </div>
                     </div>
@@ -258,7 +233,7 @@
         <div class="container">
            <div id="footerVis" class="card card-shadow-2 bg-white">
               <div class="card-body text-center">Visualización de datos de la plataforma de votación digital 
-                <a href="https://getbootstrap.com/">Decide Dialga</a>, por el grupo <a href="https://twitter.com/mdo">Dialga-Visualizer</a>.</div>
+                <a href="https://github.com/decide-dialga/decide/">Decide-Dialga</a>, por el grupo <a href="https://github.com/orgs/decide-dialga/teams/decide-dialga-visualizer">Dialga-Visualizer</a>.</div>
            </div>
         </div>
      </footer>
@@ -283,7 +258,13 @@
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
     <script>
         document.getElementsByTagName("body")[0].className = "bg-light";
-        
+
+        Date.prototype.getFullMinutes = function () {
+        if (this.getMinutes() < 10) {
+            return '0' + this.getMinutes();
+        }
+        return this.getMinutes();
+        };
         
         $(function () {
             $('[data-toggle="popover"]').popover()
@@ -309,9 +290,9 @@
 
         voting.end_date = new Date(voting.end_date);
         voting.start_date = new Date(voting.start_date);
-        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getMinutes()+" "+voting.start_date.getDate()+"/"
+        document.getElementById("start_date").innerText = voting.start_date.getHours()+":"+voting.start_date.getFullMinutes()+" "+voting.start_date.getDate()+"/"
           +(voting.start_date.getMonth()+1)+"/"+voting.start_date.getFullYear();
-        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getMinutes()+" "+voting.end_date.getDate()+"/"
+        document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getFullMinutes()+" "+voting.end_date.getDate()+"/"
           +(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
         document.getElementById("total_votes").innerText = getTotalVotes();
         //console.log(voting);
@@ -359,8 +340,8 @@
 
         //Function to change the type of the chartjs graph
         function changeTypeChartJsGraph() {
-            let option = document.getElementsByClassName("changeGraph");
-            graphType = option[0].value;
+            let option = document.getElementById("changeGraph");
+            graphType = option.value;
             graph.destroy();
 
             if(graphType === 'horizontalBar') {
