@@ -5,7 +5,7 @@ from django.test.client import Client, RequestFactory
 from django.urls import reverse
 from django.contrib.auth.models import AnonymousUser
 
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
 
@@ -132,3 +132,82 @@ class AuthTestCase(APITestCase):
             sorted(list(response.json().keys())),
             ['token', 'user_pk']
         )
+
+    def test_signup(self):
+
+        request = RequestFactory().post(reverse('account_signup'),
+                                        {'username': 'voter10',
+                                         'email': 'email@gmail.com',
+                                         'password1': '1234ABCD.*',
+                                         'password2': '1234ABCD.*',
+                                         'email': 'email@gmail.com',
+                                         'email1': 'email.github@gmail.com',
+                                         'email2': 'email.facebook@gmail.com'})
+
+        #
+        # response = self.client.post('/authentication/accounts/signup/', data, format='json')
+        # self.assertEqual(response.status_code, 200)
+        from django.contrib.messages.middleware import MessageMiddleware
+        from django.contrib.sessions.middleware import SessionMiddleware
+        SessionMiddleware().process_request(request)
+        MessageMiddleware().process_request(request)
+        request.user = AnonymousUser()
+        from .views import signup
+        signup(request)
+
+        data = {'username': 'voter10', 'password': '1234ABCD.*'}
+        response = self.client.post('/authentication/login/', data, format='json')
+        self.assertEqual(response.status_code, 200)
+        token = response.json()
+
+        response = self.client.post('/authentication/getuser/', token, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        user = response.json()
+        self.assertEqual(user['username'], 'voter10')
+
+    def test_signup_user_already_exist(self):
+        # create user
+        request = RequestFactory().post(reverse('account_signup'),
+                                        {'username': 'voter10',
+                                         'email': 'email@gmail.com',
+                                         'password1': '1234ABCD.*',
+                                         'password2': '1234ABCD.*',
+                                         'email': 'email@gmail.com',
+                                         'email1': 'email.github@gmail.com',
+                                         'email2': 'email.facebook@gmail.com'})
+
+        from django.contrib.messages.middleware import MessageMiddleware
+        from django.contrib.sessions.middleware import SessionMiddleware
+        SessionMiddleware().process_request(request)
+        MessageMiddleware().process_request(request)
+        request.user = AnonymousUser()
+        from .views import signup
+        signup(request)
+
+        # create the same user again
+        request = RequestFactory().post(reverse('account_signup'),
+                                        {'username': 'voter10',
+                                         'email': 'email@gmail.com',
+                                         'password1': '1234ABCD.*',
+                                         'password2': '1234ABCD.*',
+                                         'email': 'email@gmail.com',
+                                         'email1': 'email.github@gmail.com',
+                                         'email2': 'email.facebook@gmail.com'})
+
+        from django.contrib.messages.middleware import MessageMiddleware
+        from django.contrib.sessions.middleware import SessionMiddleware
+        SessionMiddleware().process_request(request)
+        MessageMiddleware().process_request(request)
+        request.user = AnonymousUser()
+        from .views import signup
+        duplicate = False
+        try:
+            resp = signup(request)
+        except Exception as exception:
+            duplicate = True
+
+
+
+
+
