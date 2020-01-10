@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 from base import mods
 from base.models import Auth, Key
-from store.models import Vote
+
 
 import pandas as pd
 

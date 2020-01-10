@@ -9,7 +9,7 @@ from .models import Question, QuestionOption, Voting
 from .serializers import SimpleVotingSerializer, VotingSerializer
 from base.perms import UserIsStaff
 from base.models import Auth
-from store.models import Vote
+
 
 
 
@@ -100,13 +100,8 @@ class VotingUpdate(generics.RetrieveUpdateDestroyAPIView):
 
                 msg = 'Voting tallied'
 
-        elif action == 'deleteAll':
-            votes = voting.get_votes(request.auth.key)
-
-
-
-
-
+        
+           
 
         else:
             msg = 'Action not found, try with start, stop or tally'
