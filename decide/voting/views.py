@@ -103,9 +103,6 @@ class VotingUpdate(generics.RetrieveUpdateDestroyAPIView):
 
                 msg = 'Voting tallied'
 
-        
-           
-
         else:
             msg = 'Action not found, try with start, stop or tally'
             st = status.HTTP_400_BAD_REQUEST
