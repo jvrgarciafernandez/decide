@@ -206,7 +206,8 @@
                  <div class="modal-body">
                     <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block">
                     <i class="fas fa-file-pdf"></i> PDF</button> 
-                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block">
+
+                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block" onclick="exportTableToCSV('data.csv')">
                     <i class="fas fa-file-csv"></i> CSV</button>
                  </div>
                  <div class="modal-footer">
@@ -642,6 +643,70 @@
         window.onload = checkCookie();
     </script>
 
+    <script>
+
+        var voting = {{voting|safe}};
+
+        function getTotalVotes(){
+           var res = 0
+           for (var i = 0; i < voting.postproc.length; i++) {
+              res += voting.postproc[i]["votes"]
+           }
+           return res;
+        }
+
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            // fichero CSV
+            csvFile = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+
+            // link de descarga y codificación
+            downloadLink = document.createElement("a");
+            var encodedUri = encodeURI(csvFile)
+            downloadLink.setAttribute("href", encodedUri)
+
+            // nombre del fichero
+            downloadLink.download = filename;
+
+            // Crear un link al archivo
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            // Ocultar link de descarga
+            downloadLink.style.display = "none";
+
+            // Añadir el link al DOM
+            document.body.appendChild(downloadLink);
+
+            // Click al link de descarga
+            downloadLink.click();
+        }
+
+        function exportTableToCSV(filename) {
+            var tableHeaders = ["Votacion", "Comienzo", "Fin", "Votos"];
+            var csv = new Array()
+
+            var name = voting.name
+            var start_date = new Date(voting.start_date);
+            var end_date = new Date(voting.end_date);
+            var total_votes = getTotalVotes();
+
+            csv.push(tableHeaders[0]+":"+name)
+            csv.push(tableHeaders[1]+":"+start_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[2]+":"+end_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[3]+":"+total_votes)
+
+            for (let i=0; i< voting.postproc.length; i++) {
+                csv.push("Opcion "  + voting.postproc[i].option + ": " + voting.postproc[i].votes)
+            }
+            
+            // Descarga del fichero CSV
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+    </script>
+
    <!-- SCRIPTS PARA COMPARTIR EN REDES SOCIALES -->    
     <script>
       
@@ -789,6 +854,6 @@
          document.querySelector("h5.card-title").innerHTML + ' ' 
          + window.location.href )
       });
-      
+
     </script>
 {% endblock %}
