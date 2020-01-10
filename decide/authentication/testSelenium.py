@@ -1,3 +1,4 @@
+import os
 import time
 import unittest
 
@@ -29,19 +30,19 @@ class TestSignin(StaticLiveServerTestCase):
     def tearDown(self):
         self.driver.close()
 
-    def test_signin(self):
-        self.driver.get(
-            self.live_server_url +
-            "/authentication/accounts/login/"
-        )
-        self.driver.find_element_by_id('id_login').send_keys("voter1")
-        self.driver.find_element_by_id(
-            'id_password'
-        ).send_keys("123" + Keys.ENTER)
-        self.assertEqual(
-            self.driver.find_element_by_id('navbarDropdownMenuLink').text,
-            'voter1'
-        )
+    # def test_signin(self):
+    #     self.driver.get(
+    #         self.live_server_url +
+    #         "/authentication/accounts/login/"
+    #     )
+    #     self.driver.find_element_by_id('id_login').send_keys("voter1")
+    #     self.driver.find_element_by_id(
+    #         'id_password'
+    #     ).send_keys("123" + Keys.ENTER)
+    #     self.assertEqual(
+    #         self.driver.find_element_by_id('navbarDropdownMenuLink').text,
+    #         'voter1'
+    #     )
 
     def test_fake_signin(self):
         self.driver.get(
