@@ -631,6 +631,65 @@
         colors=colorsNew;
         }
 
+        function protanomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(241,196,15)","rgb(163,133,10)","rgb(244,213,88)","rgb(115,100,41)","rgb(168,137,10)","rgb(255,207,15)","rgb(196,159,12)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
 </script>
 
 
