@@ -158,4 +158,4 @@ class Voting(models.Model):
             if len(df3.get_group(key)) != 3 :
                 raise AssertionError('Las siguientes candidaturas no cumplen con la relación 1/2 entre hombres y mujeres:\n' + str(df3.get_group(key)))
 
-
+        return df
