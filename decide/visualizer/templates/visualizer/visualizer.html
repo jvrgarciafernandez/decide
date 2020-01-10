@@ -142,12 +142,13 @@
                     <!-- congreso -->
                     <div id="congressCard" class="card card-shadow-2 bg-white mt-4">
                        <a data-toggle="collapse" data-target="#congreso" aria-expanded="true" aria-controls="congreso" class="pointer">
-                          <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Congreso</h5>
+                          <h5 class="card-header text-muted" id="headingCongreso"><i class="fas fa-chart-pie"></i> Gráfica</h5>
                        </a>
                        <div id="congreso" class="collapse show" aria-labelledby="headingCongreso" data-parent="#graphics">
                           <div class="card-body">
-                             <h5 class="card-title">Gráfica de votos del Congreso</h5>
+                             <h5 class="card-title">[[ voting.name ]]</h5>
                              <p class="card-text">
+                                <p>[[ voting.desc ]]</p>
                                  <canvas id="canvas" width="250" height="100"></canvas>
                              </p>
                              <div class="row">
