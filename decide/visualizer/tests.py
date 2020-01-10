@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+'''
 import unittest
 from selenium import webdriver
 import os
@@ -57,3 +57,4 @@ class TestSignup(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
 
+'''
