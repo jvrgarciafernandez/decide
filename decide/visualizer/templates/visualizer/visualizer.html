@@ -245,7 +245,36 @@
                     </button>
                  </div>
                  <div class="modal-body">
-                    Botones para las distintas redes sociales....
+                  <div class="container">
+                     <div class="row">
+                       <div class="col-sm-3">
+                        <button id="facebook-share" type="button" class="btn btn-link">
+                        <i class="fab fa-facebook-f"></i> Facebook</button>
+                       
+                        <button id="linkedin-share" type="button" class="btn btn-link">
+                        <i class="fab fa-linkedin-in"></i> Linkedin</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="twitter-share" type="button" class="btn btn-link">
+                        <i class="fab fa-twitter"></i> Twitter</button>
+                        <button id="reddit-share" type="button" class="btn btn-link">
+                           <i class="fab fa-reddit"></i> Reddit</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="email-share" type="button" class="btn btn-link">
+                        <i class="fas fa-envelope"></i> Email</button>
+
+                        <button id="slack-share" type="button" class="btn btn-link">
+                        <i class="fab fa-slack-hash"></i> &nbsp;&nbsp;Slack</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="telegram-share" type="button" class="btn btn-link">
+                           <i class="fab fa-telegram"></i> Telegram</button>
+   
+                        <button id="whatsapp-share" type="button" class="btn btn-link">
+                        <i class="fab fa-whatsapp"></i> Whatsapp</button>
+                     </div>
+                  </div>
                  </div>
                  <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -536,5 +565,155 @@
          }
 
         window.onload = checkCookie();
+    </script>
+
+   <!-- SCRIPTS PARA COMPARTIR EN REDES SOCIALES -->    
+    <script>
+      
+      // URIs
+      var FACEBOOK_ENDPOINT = 'https://www.facebook.com/sharer/sharer.php?u=';
+      var LINKEDIN_ENDPOINT = 'https://www.linkedin.com/shareArticle?mini=true';
+      var TWITTER_ENDPOINT  = 'https://twitter.com/intent/tweet?';
+      var REDDIT_ENDPOINT   = 'https://www.reddit.com/submit?';
+      var MAIL_ENDPOINT     = 'mailto:?';
+      var SLACK_ENDPOINT    = '';
+      var TELEGRAM_ENDPOINT = 'https://t.me/share/url?';
+      var WHATSAPP_ENDPOINT = 'https://api.whatsapp.com/send?';
+    
+      // BOTONES
+      var boton_facebook = document.querySelector("#facebook-share");
+      var boton_linkedin = document.querySelector("#linkedin-share");
+      var boton_twitter  = document.querySelector("#twitter-share");
+      var boton_reddit   = document.querySelector("#reddit-share");
+      var boton_email    = document.querySelector("#email-share");
+      var boton_slack    = document.querySelector("#slack-share");
+      var boton_telegram = document.querySelector("#telegram-share");
+      var boton_whatsapp = document.querySelector("#whatsapp-share");
+
+      // CLASES
+      var in_mouse = "btn btn-outline-success";
+      var out_mouse_1 = "btn-outline-success";
+      var out_mouse_2 = "btn-link";
+
+      // FACEBOOK
+      boton_facebook.addEventListener('mouseover', ()=>{
+         boton_facebook.className = in_mouse;
+      });
+
+      boton_facebook.addEventListener('mouseout', ()=>{
+         boton_facebook.classList.remove(out_mouse_1);
+         boton_facebook.classList.add(out_mouse_2);
+      });
+
+      boton_facebook.addEventListener('click', ()=>{
+         window.open(FACEBOOK_ENDPOINT + window.location.href);
+      });
+
+      // LINKEDIN
+      boton_linkedin.addEventListener('mouseover', ()=>{
+         boton_linkedin.className = in_mouse;
+      });
+
+      boton_linkedin.addEventListener('mouseout', ()=>{
+         boton_linkedin.classList.remove(out_mouse_1);
+         boton_linkedin.classList.add(out_mouse_2);
+      });//%s%s
+      boton_linkedin.addEventListener('click', ()=>{
+         window.open(LINKEDIN_ENDPOINT + '&title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // TWITTER
+      boton_twitter.addEventListener('mouseover', ()=>{
+         boton_twitter.className = in_mouse;
+      });
+
+      boton_twitter.addEventListener('mouseout', ()=>{
+         boton_twitter.classList.remove(out_mouse_1);
+         boton_twitter.classList.add(out_mouse_2);
+      });
+      
+      boton_twitter.addEventListener('click', ()=>{
+         window.open(TWITTER_ENDPOINT + 'original_referer=' + 
+         window.location.href + '&text=' + 
+         document.querySelector("h5.card-title").innerHTML + '&tw_p=tweetbutton' 
+         + '&url=' + window.location.href);
+      });
+
+      // REDDIT
+      boton_reddit.addEventListener('mouseover', ()=>{
+         boton_reddit.className = in_mouse;
+      });
+
+      boton_reddit.addEventListener('mouseout', ()=>{
+         boton_reddit.classList.remove(out_mouse_1);
+         boton_reddit.classList.add(out_mouse_2);
+      });
+
+      boton_reddit.addEventListener('click', ()=>{
+         window.open(REDDIT_ENDPOINT + 'title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // EMAIL
+      boton_email.addEventListener('mouseover', ()=>{
+         boton_email.className = in_mouse;
+      });
+
+      boton_email.addEventListener('mouseout', ()=>{
+         boton_email.classList.remove(out_mouse_1);
+         boton_email.classList.add(out_mouse_2);
+      });
+
+      boton_email.addEventListener('click', ()=>{
+         window.open(MAIL_ENDPOINT + 'subject=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&body=' + window.location.href);
+      });
+
+      // SLACK
+      boton_slack.addEventListener('mouseover', ()=>{
+         boton_slack.className = in_mouse;
+      });
+
+      boton_slack.addEventListener('mouseout', ()=>{
+         boton_slack.classList.remove(out_mouse_1);
+         boton_slack.classList.add(out_mouse_2);
+      });
+
+      // TELEGRAM
+      boton_telegram.addEventListener('mouseover', ()=>{
+         boton_telegram.className = in_mouse;
+      });
+
+      boton_telegram.addEventListener('mouseout', ()=>{
+         boton_telegram.classList.remove(out_mouse_1);
+         boton_telegram.classList.add(out_mouse_2);
+      });
+
+      boton_telegram.addEventListener('click', ()=>{
+         window.open(TELEGRAM_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // WHATSAPP
+      boton_whatsapp.addEventListener('mouseover', ()=>{
+         boton_whatsapp.className = in_mouse;
+      });
+
+      boton_whatsapp.addEventListener('mouseout', ()=>{
+         boton_whatsapp.classList.remove(out_mouse_1);
+         boton_whatsapp.classList.add(out_mouse_2);
+      });
+
+      boton_whatsapp.addEventListener('click', ()=>{
+         window.open(WHATSAPP_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + ' ' 
+         + window.location.href )
+      });
+      
     </script>
 {% endblock %}
