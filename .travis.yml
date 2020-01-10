@@ -21,6 +21,10 @@ services:
 
 addons:
   postgresql: "9.4"
+  chrome: stable
+
+before_install:
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=8000 http://localhost &
 
 before_script:
   - psql -U postgres -c "create user decide password 'decide'"
@@ -50,7 +54,7 @@ script:
 before_deploy:
   - git config --local user.name $USER_TRAVIS
   - git config --local user.email $EMAIL_TRAVIS
-  - export YEAR=`date +"%Y"`  
+  - export YEAR=`date +"%Y"`
   - export GIT_TAG=M$MILESTONE_TRAVIS-build.$TRAVIS_BUILD_NUMBER-$YEAR
   - git tag -a $GIT_TAG -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
 
