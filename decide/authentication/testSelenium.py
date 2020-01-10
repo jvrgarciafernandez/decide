@@ -4,6 +4,7 @@ import unittest
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.firefox.options import Options
 
 from .models import CustomUser
 
@@ -16,11 +17,15 @@ class TestSignin(StaticLiveServerTestCase):
         super(TestSignin, cls).setUpClass()
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        options = Options()
+        options.add_argument('-headless')
+        self.driver = webdriver.Firefox(options=options)
+        self.driver.implicitly_wait(5)
+        self.driver.maximize_window()
+
         u = CustomUser(username='voter1')
         u.set_password('123')
         u.save()
-
         u2 = CustomUser(username='admin')
         u2.set_password('admin')
         u2.is_superuser = True
