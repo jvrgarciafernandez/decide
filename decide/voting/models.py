@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from base import mods
 from base.models import Auth, Key
 
+
 import pandas as pd
 
 
@@ -40,6 +41,8 @@ class Voting(models.Model):
     question = models.ForeignKey(Question, related_name='voting',
      on_delete=models.CASCADE)
 
+
+
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
 
@@ -70,8 +73,9 @@ class Voting(models.Model):
         # gettings votes from store
         votes = mods.get('store', params={'voting_id': self.id},
          HTTP_AUTHORIZATION='Token ' + token)
+
         # anon votes
-        return [[i['a'], i['b']] for i in votes]
+        return votes
 
     def tally_votes(self, token=''):
         '''

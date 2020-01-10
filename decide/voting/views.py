@@ -11,6 +11,9 @@ from base.perms import UserIsStaff
 from base.models import Auth
 
 
+
+
+
 class VotingView(generics.ListCreateAPIView):
     queryset = Voting.objects.all()
     serializer_class = VotingSerializer
@@ -97,7 +100,12 @@ class VotingUpdate(generics.RetrieveUpdateDestroyAPIView):
                 st = status.HTTP_400_BAD_REQUEST
             else:
                 voting.tally_votes(request.auth.key)
+
                 msg = 'Voting tallied'
+
+        
+           
+
         else:
             msg = 'Action not found, try with start, stop or tally'
             st = status.HTTP_400_BAD_REQUEST
