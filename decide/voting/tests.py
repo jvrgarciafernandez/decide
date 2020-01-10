@@ -89,7 +89,24 @@ class VotingTestCase(BaseTestCase):
                 mods.post('store', json=data)
         return clear
 
-   
+    """
+    def test_complete_voting(self):
+        v = self.create_voting()
+        self.create_voters(v)
+
+        v.create_pubkey()
+        v.start_date = timezone.now()
+        v.save()
+
+        clear = self.store_votes(v)
+
+        self.login()  # set token
+        v.tally_votes(self.token)
+
+        tally = v.tally
+        tally.sort()
+        tally = {k: len(list(x)) for k, x in itertools.groupby(tally)}
+        """
 
     def test_create_voting_from_api(self):
         data = {'name': 'Example'}
