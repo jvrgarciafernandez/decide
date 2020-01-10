@@ -345,13 +345,13 @@
             labels.push(postproc[i].option);
             datas.push(postproc[i].votes);
             if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
-                colorsNew.push(PodemosPartido[podemosindice]);
+                colors.push(PodemosPartido[podemosindice]);
             podemosindice++;
             }else if(postproc[i].option.toUpperCase().startsWith('PP')){
-                colorsNew.push(PPPartido[ppindice]);
+                colors.push(PPPartido[ppindice]);
                 ppindice++;
             }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
-                colorsNew.push(PSOEPartido[psoeindice]);
+                colors.push(PSOEPartido[psoeindice]);
                 psoeindice++;
             }else{
                 colors.push(rgb);
