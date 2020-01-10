@@ -364,8 +364,11 @@
         var PSOEPartido = ["rgb(128,38,28)","rgb(99,30,22)","rgb(191,57,42)","rgb(204,61,45)","rgb(166,49,36)","rgb(255,76,56)","rgb(255,76,56)"]
        
         let question = voting.name;
-        let labels = [];
-        let datas = [];
+        let labels = ["PP", "PSOE", "Podemos", "Otros"];
+        let ppVotes = 0;
+        let psoeVotes = 0;
+        let podemosVotes = 0;
+        let otrosVotes = 0;
         let colors = [];
         let podemosindice = 0; 
         let ppindice = 0;
@@ -375,21 +378,34 @@
             let green = Math.floor(Math.random() * 256);
             let blue = Math.floor(Math.random() * 256);
             let rgb = "rgb(" + red + "," + green + "," + blue +")";
-            labels.push(postproc[i].option);
-            datas.push(postproc[i].votes);
-            if(postproc[i].option.startsWith('Podemos:')){
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
             colors.push(PodemosPartido[podemosindice]);
             podemosindice++;
-            }else if(postproc[i].option.startsWith('PP:')){
+            podemosVotes+=postproc[i].votes;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
                 colors.push(PPPartido[ppindice]);
                 ppindice++;
-            }else if(postproc[i].option.startsWith('PSOE:')){
+                ppVotes+=postproc[i].votes;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
                 colors.push(PSOEPartido[psoeindice]);
                 psoeindice++;
+                psoeVotes+=postproc[i].votes;
             }else{
-                colors.push(rgb);
+                otrosVotes+=postproc[i].votes;
             }
         }
+
+        let datas = [ppVotes, psoeVotes, podemosVotes, otrosVotes];
+        let newLabels = []
+        for (let i = 0; i < labels.length; i++) {
+            let concateichon = labels[i] + ": " + datas[i] + " votos";
+            console.log(concateichon)
+            newLabels.push(concateichon);
+        }
+
+        colors.splice(-1, 1);
+        colors.push("#c1c1c1");
+
 
         var canvas = document.getElementById("canvas");
         var context = canvas.getContext('2d');
@@ -399,7 +415,7 @@
         let graph = new Chart(context, {
             type: graphType,
             data: {
-                labels: labels,
+                labels: newLabels,
                 datasets: [{
                     backgroundColor: colors,
                     data: datas
