@@ -72,6 +72,7 @@ AUTHENTICATION_BACKENDS = [
     # Needed for SocialAuth branch
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    'social_core.backends.facebook.FacebookOAuth2',
     #################################################
 ]
 
