@@ -16,7 +16,7 @@ class TestSignin(StaticLiveServerTestCase):
         super(TestSignin, cls).setUpClass()
 
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(5)
         self.driver.maximize_window()
 
