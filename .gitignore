@@ -109,3 +109,9 @@ ENV/
 .vscode/*
 decide/.vscode
 *_copy
+
+# Extra
+/bin
+/man
+.DS_Store
+pyvenv.cfg
