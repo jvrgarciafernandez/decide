@@ -47,6 +47,20 @@
 
 {% block content %}
     <div id="app-visualizer">
+      <div v-if="!voting.start_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-calendar-plus"></i> Votación no comenzada</h4>
+         <p>La votación actualmente no ha comenzado, visite de nuevo esta página para realizar la votación cuando haya comenzado.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]]</p>
+       </div>
+      <div v-else-if="!voting.end_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-cog fa-spin"></i> Votación en curso</h4>
+         <p>La votación actualmente sigue en curso, los datos estarán disponibles una vez finalice.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]] - Comienzo: [[ voting.start_date ]]</p>
+       </div>
+
+    <div v-else>
     <main role="main">
         <div class="container mt-4">
            <div class="card card-shadow-2 bg-white">
@@ -229,6 +243,7 @@
            </div>
         </div>
      </main>
+     </div>
      <footer class="mt-5 mb-3">
         <div class="container">
            <div id="footerVis" class="card card-shadow-2 bg-white">
