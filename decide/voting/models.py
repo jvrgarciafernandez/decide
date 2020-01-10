@@ -66,13 +66,14 @@ class Voting(models.Model):
         self.pub_key = pk
         self.save()
 
-    def get_votes(self, token=''):
-        # gettings votes from store
-        votes = mods.get('store', params={'voting_id': self.id},
-         HTTP_AUTHORIZATION='Token ' + token)
 
-        # anon votes
-        return votes
+    def get_votes(self, token=''):
+	# gettings votes from store
+        votes = mods.get('store', params={'voting_id': self.id},
+        HTTP_AUTHORIZATION='Token ' + token)
+
+	# anon votes
+        return [[i['a'], i['b']] for i in votes]
 
     def tally_votes(self, token=''):
         '''
