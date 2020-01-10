@@ -13,7 +13,7 @@ class TestSignin(StaticLiveServerTestCase):
     def setUpClass(cls):
         cls.host = "localhost"
         cls.port = 8000
-        super(TestSignup, cls).setUpClass()
+        super(TestSignin, cls).setUpClass()
 
     def setUp(self):
         self.driver = webdriver.Chrome(
