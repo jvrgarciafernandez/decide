@@ -2,6 +2,12 @@ import random
 import itertools
 from django.utils import timezone
 from django.conf import settings
+# from django.contrib.auth.models import User
+
+from django.test import TestCase
+from rest_framework.test import APIClient
+from rest_framework.test import APITestCase
+
 from base import mods
 from base.tests import BaseTestCase
 from census.models import Census
@@ -41,7 +47,8 @@ class VotingTestCase(BaseTestCase):
         v.save()
 
         a, _ = Auth.objects.get_or_create(url=settings.BASEURL,
-                                          defaults={'me': True, 'name': 'test auth'})
+                                          defaults={'me': True,
+                                           'name': 'test auth'})
         a.save()
         v.auths.add(a)
 
@@ -82,30 +89,31 @@ class VotingTestCase(BaseTestCase):
                 voter = voters.pop()
                 mods.post('store', json=data)
         return clear
+
     """
     def test_complete_voting(self):
-        v = self.create_voting()
-        self.create_voters(v)
+	v = self.create_voting()
+	self.create_voters(v)
 
-        v.create_pubkey()
-        v.start_date = timezone.now()
-        v.save()
+	v.create_pubkey()
+	v.start_date = timezone.now()
+	v.save()
 
-        clear = self.store_votes(v)
+	clear = self.store_votes(v)
 
-        self.login()  # set token
-        v.tally_votes(self.token)
+	self.login()  # set token
+	v.tally_votes(self.token)
 
-        tally = v.tally
-        tally.sort()
-        tally = {k: len(list(x)) for k, x in itertools.groupby(tally)}
+	tally = v.tally
+	tally.sort()
+	tally = {k: len(list(x)) for k, x in itertools.groupby(tally)}
 
-        for q in v.question.options.all():
-            self.assertEqual(tally.get(q.number, 0), clear.get(q.number, 0))
+	for q in v.question.options.all():
+	    self.assertEqual(tally.get(q.number, 0), clear.get(q.number, 0))
 
-        for q in v.postproc:
-            self.assertEqual(tally.get(q["number"], 0), q["votes"])
-       """
+	for q in v.postproc:
+	    self.assertEqual(tally.get(q["number"], 0), q["votes"])
+    """
 
     def test_create_voting_from_api(self):
         data = {'name': 'Example'}
@@ -152,77 +160,91 @@ class VotingTestCase(BaseTestCase):
         voting = self.create_voting()
 
         data = {'action': 'start'}
-        # response = self.client.post('/voting/{}/'.format(voting.pk), data, format='json')
+        # response = self.client.post('/voting/{}/'.format(
+        # voting.pk), data, format='json')
         # self.assertEqual(response.status_code, 401)
 
         # login with user no admin
         self.login(user='noadmin')
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 403)
 
         # login with user admin
         self.login()
         data = {'action': 'bad'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
 
         # STATUS VOTING: not started
         for action in ['stop', 'tally']:
             data = {'action': action}
-            response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+            response = self.client.put('/voting/{}/'.format(voting.pk),
+             data, format='json')
             self.assertEqual(response.status_code, 400)
             self.assertEqual(response.json(), 'Voting is not started')
 
         data = {'action': 'start'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), 'Voting started')
 
         # STATUS VOTING: started
         data = {'action': 'start'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already started')
 
         data = {'action': 'tally'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting is not stopped')
 
         data = {'action': 'stop'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), 'Voting stopped')
 
         # STATUS VOTING: stopped
         data = {'action': 'start'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already started')
 
         data = {'action': 'stop'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already stopped')
 
         data = {'action': 'tally'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), 'Voting tallied')
 
         # STATUS VOTING: tallied
         data = {'action': 'start'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already started')
 
         data = {'action': 'stop'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already stopped')
 
         data = {'action': 'tally'}
-        response = self.client.put('/voting/{}/'.format(voting.pk), data, format='json')
+        response = self.client.put('/voting/{}/'.format(voting.pk),
+         data, format='json')
         self.assertEqual(response.status_code, 400)
         self.assertEqual(response.json(), 'Voting already tallied')
 
@@ -230,7 +252,8 @@ class VotingTestCase(BaseTestCase):
 
         THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
         filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado.xlsx'
-        # my_file = os.path.join(THIS_FOLDER + '/docs/CandidatesFiles/', 'Candidatos_Senado.xlsx')
+        # my_file = os.path.join(THIS_FOLDER + '/docs/CandidatesFiles/',
+        #  'Candidatos_Senado.xlsx')
         
         # Test positivo
         Voting.checkInputFile(filePath)
@@ -249,9 +272,11 @@ class VotingTestCase(BaseTestCase):
         except:
             print('Test negativo de provincias correcto')
         
-        # Test negativo. No hay 6 candidatos/provincia/partido político ni relación 1/2 entre hombres y mujeres
+        # Test negativo. No hay 6 candidatos/provincia/partido político 
+        # ni relación 1/2 entre hombres y mujeres
         filePath = THIS_FOLDER + '/docs/CandidatesFiles/Candidatos_Senado4.xlsx'
         try:
             Voting.checkInputFile(filePath)
         except:
-            print('Test negativo de 6 candidatos/provincia/partido político y relación 1/2 correcto')
+            print('Test negativo de 6 candidatos/provincia/partido político'+ 
+            'yrelación 1/2 correcto')
