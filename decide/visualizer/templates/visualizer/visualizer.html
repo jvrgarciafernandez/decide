@@ -53,6 +53,20 @@
 
 {% block content %}
     <div id="app-visualizer">
+      <div v-if="!voting.start_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-calendar-plus"></i> Votación no comenzada</h4>
+         <p>La votación actualmente no ha comenzado, visite de nuevo esta página para realizar la votación cuando haya comenzado.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]]</p>
+       </div>
+      <div v-else-if="!voting.end_date" class="col-sm alert alert-info card-shadow-2 mt-4 w-75" role="alert" style="margin:0 auto;">
+         <h4 class="alert-heading"><i class="fas fa-cog fa-spin"></i> Votación en curso</h4>
+         <p>La votación actualmente sigue en curso, los datos estarán disponibles una vez finalice.</p>
+         <hr>
+         <p class="mb-0">[[ voting.name ]] #[[ voting.id ]] - Comienzo: [[ voting.start_date ]]</p>
+       </div>
+
+    <div v-else>
     <main role="main">
         <div class="container mt-4">
            <div id="topCard" class="card card-shadow-2 bg-white">
@@ -70,11 +84,10 @@
                           Simular espacio de color
                           </a>
                           <div id="dropDownColors" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a id="dropDownColors1" class="dropdown-item active" href="#">Desactivado</a>
-                             <a id="dropDownColors2" class="dropdown-item" href="#">Monocromático</a>
-                             <a id="dropDownColors3" class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
-                             <a id="dropDownColors4" class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
-                             <a id="dropDownColors5" class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
+                             <a id="dropDownColors2" class="dropdown-item pointer" onclick="monocromatico()">Monocromático</a>
+                             <a id="dropDownColors3" class="dropdown-item pointer" onclick="deuteranomalia()">Deuteranomalía (rojo-verde)</a>
+                             <a id="dropDownColors4" class="dropdown-item pointer" onclick="protanomalia()">Protanomalía (rojo-verde)</a>
+                             <a id="dropDownColors5" class="dropdown-item pointer" onclick="tritranomalia()">Tritanomalía (azul-amarillo)</a>
                           </div>
                        </div> 
                     </li>
@@ -204,9 +217,10 @@
                     </button>
                  </div>
                  <div class="modal-body">
-                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block">
+                    <button id="buttonPDF" type="button" class="btn btn-outline-primary btn-block" onclick="printPDF()">
                     <i class="fas fa-file-pdf"></i> PDF</button> 
-                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block">
+
+                    <button id="buttonCSV" type="button" class="btn btn-outline-success btn-block" onclick="exportTableToCSV('data.csv')">
                     <i class="fas fa-file-csv"></i> CSV</button>
                  </div>
                  <div class="modal-footer">
@@ -226,7 +240,36 @@
                     </button>
                  </div>
                  <div class="modal-body">
-                    Botones para las distintas redes sociales....
+                  <div class="container">
+                     <div class="row">
+                       <div class="col-sm-3">
+                        <button id="facebook-share" type="button" class="btn btn-link">
+                        <i class="fab fa-facebook-f"></i> Facebook</button>
+                       
+                        <button id="linkedin-share" type="button" class="btn btn-link">
+                        <i class="fab fa-linkedin-in"></i> Linkedin</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="twitter-share" type="button" class="btn btn-link">
+                        <i class="fab fa-twitter"></i> Twitter</button>
+                        <button id="reddit-share" type="button" class="btn btn-link">
+                           <i class="fab fa-reddit"></i> Reddit</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="email-share" type="button" class="btn btn-link">
+                        <i class="fas fa-envelope"></i> Email</button>
+
+                        <button id="slack-share" type="button" class="btn btn-link">
+                        <i class="fab fa-slack-hash"></i> &nbsp;&nbsp;Slack</button>
+                     </div>
+                     <div class="col-sm-3">
+                        <button id="telegram-share" type="button" class="btn btn-link">
+                           <i class="fab fa-telegram"></i> Telegram</button>
+   
+                        <button id="whatsapp-share" type="button" class="btn btn-link">
+                        <i class="fab fa-whatsapp"></i> Whatsapp</button>
+                     </div>
+                  </div>
                  </div>
                  <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
@@ -235,6 +278,7 @@
            </div>
         </div>
      </main>
+     </div>
      <footer class="mt-5 mb-3">
         <div class="container">
            <div id="footerVis" class="card card-shadow-2 bg-white">
@@ -286,9 +330,15 @@
             }
         });
 
+        let postproc = voting.postproc;
+        let postproc_length = 0;
+        if(postproc_length !== undefined) {
+            postproc_length = postproc.length
+        }
+
         function getTotalVotes(){
-           var res = 0
-           for (var i = 0; i < voting.postproc.length; i++) {
+           var res = 0;
+           for (var i = 0; i < postproc_length; i++) {
               res += voting.postproc[i]["votes"]
            }
            return res;
@@ -301,25 +351,60 @@
         document.getElementById("end_date").innerText = voting.end_date.getHours()+":"+voting.end_date.getFullMinutes()+" "+voting.end_date.getDate()+"/"
           +(voting.end_date.getMonth()+1)+"/"+voting.end_date.getFullYear();
         document.getElementById("total_votes").innerText = getTotalVotes();
-        //console.log(voting);
 
+        var colores = ["rgb(75,192,43)", "rgb(255,37,255)" , "rgb(223,107,171)" , "rgb(84,225,35)"]
+
+        var partidos = ["rgb(142,68,173)","rgb(192,57,43)","rgb(41,128,185)"]
+
+        var PodemosPartido = ["rgb(90,43,110)","rgb(204,97,250)","rgb(142,68,173)","rgb(152,73,186)","rgb(121,58,148)","rgb(60,29,74)", "rgb(208,99,255)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(128,38,28)","rgb(99,30,22)","rgb(191,57,42)","rgb(204,61,45)","rgb(166,49,36)","rgb(255,76,56)","rgb(255,76,56)"]
        
         let question = voting.name;
-        let labels = [];
-        let datas = [];
-        let postproc = voting.postproc;
+        let labels = ["PP", "PSOE", "Podemos", "Otros"];
+        let ppVotes = 0;
+        let psoeVotes = 0;
+        let podemosVotes = 0;
+        let otrosVotes = 0;
         let colors = [];
-
-        for (let i = 0; i < postproc.length; i++) {
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
             let red = Math.floor(Math.random() * 256);
             let green = Math.floor(Math.random() * 256);
             let blue = Math.floor(Math.random() * 256);
             let rgb = "rgb(" + red + "," + green + "," + blue +")";
-            labels.push(postproc[i].option);
-            datas.push(postproc[i].votes);
-            colors.push(rgb);
+          
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+            colors.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            podemosVotes+=postproc[i].votes;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colors.push(PPPartido[ppindice]);
+                ppindice++;
+                ppVotes+=postproc[i].votes;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colors.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+                psoeVotes+=postproc[i].votes;
+            }else{
+                otrosVotes+=postproc[i].votes;
+            }
         }
 
+        let datas = [ppVotes, psoeVotes, podemosVotes, otrosVotes];
+        let newLabels = []
+        for (let i = 0; i < labels.length; i++) {
+            let concateichon = labels[i] + ": " + datas[i] + " votos";
+            console.log(concateichon)
+            newLabels.push(concateichon);
+        }
+
+        colors.splice(-1, 1);
+        colors.push("#c1c1c1");
 
 
         var canvas = document.getElementById("canvas");
@@ -330,7 +415,7 @@
         let graph = new Chart(context, {
             type: graphType,
             data: {
-                labels: labels,
+                labels: newLabels,
                 datasets: [{
                     backgroundColor: colors,
                     data: datas
@@ -587,5 +672,466 @@
          }
 
         window.onload = checkCookie();
+    </script>
+      
+    <!-- jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+      
+<script>
+    function monocromatico(){
+        var coloresmonocromaticos = ["rgb(56,56,56)",
+    "rgb(101,101,101)",
+    "rgb(146,146,146)",
+    "rgb(188,188,188)",
+    "rgb(65,65,65)",
+    "rgb(110,110,110)",
+    "rgb(153,153,153)",
+    "rgb(197,197,197)",
+    "rgb(74,74,74)",
+    "rgb(119,119,119)",
+    "rgb(162,162,162)",
+    "rgb(206,206,206)",
+    "rgb(83,83,83)",
+    "rgb(128,128,128)",
+    "rgb(171,171,171)",
+    "rgb(215,215,215)",
+    "rgb(92,92,92)",
+    "rgb(137,137,137)",
+    "rgb(180,180,180)",
+    "rgb(224,224,224)"
+]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        for (let i = 0; i < postproc_length; i++) {
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            colorsNew.push(coloresmonocromaticos[i]);
+        }
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+    }
+
+    function deuteranomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(255,126,12)","rgb(255,167,89)","rgb(204,101,10)","rgb(224,111,11)","rgb(166,49,36)","rgb(176,87,9)","rgb(181,89,9)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+        function protanomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(241,196,15)","rgb(163,133,10)","rgb(244,213,88)","rgb(115,100,41)","rgb(168,137,10)","rgb(255,207,15)","rgb(196,159,12)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+        function tritranomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(48,255,12)","rgb(12,64,3)","rgb(114,255,89)","rgb(57,128,45)","rgb(35,181,9)","rgb(25,130,7)", "rgb(92,207,72)"]
+
+        var PSOEPartido = ["rgb(128,38,28)","rgb(99,30,22)","rgb(191,57,42)","rgb(204,61,45)","rgb(166,49,36)","rgb(255,76,56)","rgb(255,76,56)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+</script>
+
+    <script>
+        function printPDF(){
+            $('#exportModal').modal('hide');
+            let doc = new jsPDF('p','pt','a4','landscape');
+            doc.addHTML(document.body,function() {
+                doc.save('decide-dialga-visualizacion.pdf');
+            });
+        }
+
+        var voting = {{voting|safe}};
+
+        function getTotalVotes(){
+           var res = 0
+           for (var i = 0; i < voting.postproc.length; i++) {
+              res += voting.postproc[i]["votes"]
+           }
+           return res;
+        }
+
+        function downloadCSV(csv, filename) {
+            var csvFile;
+            var downloadLink;
+
+            // fichero CSV
+            csvFile = new Blob([csv], {type: "text/csv;charset=utf-8;"});
+
+            // link de descarga y codificación
+            downloadLink = document.createElement("a");
+            var encodedUri = encodeURI(csvFile)
+            downloadLink.setAttribute("href", encodedUri)
+
+            // nombre del fichero
+            downloadLink.download = filename;
+
+            // Crear un link al archivo
+            downloadLink.href = window.URL.createObjectURL(csvFile);
+
+            // Ocultar link de descarga
+            downloadLink.style.display = "none";
+
+            // Añadir el link al DOM
+            document.body.appendChild(downloadLink);
+
+            // Click al link de descarga
+            downloadLink.click();
+        }
+
+        function exportTableToCSV(filename) {
+            var tableHeaders = ["Votacion", "Comienzo", "Fin", "Votos"];
+            var csv = new Array()
+
+            var name = voting.name
+            var start_date = new Date(voting.start_date);
+            var end_date = new Date(voting.end_date);
+            var total_votes = getTotalVotes();
+
+            csv.push(tableHeaders[0]+":"+name)
+            csv.push(tableHeaders[1]+":"+start_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[2]+":"+end_date.toLocaleDateString("es-ES"))
+            csv.push(tableHeaders[3]+":"+total_votes)
+
+            for (let i=0; i< voting.postproc.length; i++) {
+                csv.push("Opcion "  + voting.postproc[i].option + ": " + voting.postproc[i].votes)
+            }
+            
+            // Descarga del fichero CSV
+            downloadCSV(csv.join("\n"), filename);
+        }
+
+    </script>
+
+   <!-- SCRIPTS PARA COMPARTIR EN REDES SOCIALES -->    
+    <script>
+      
+      // URIs
+      var FACEBOOK_ENDPOINT = 'https://www.facebook.com/sharer/sharer.php?u=';
+      var LINKEDIN_ENDPOINT = 'https://www.linkedin.com/shareArticle?mini=true';
+      var TWITTER_ENDPOINT  = 'https://twitter.com/intent/tweet?';
+      var REDDIT_ENDPOINT   = 'https://www.reddit.com/submit?';
+      var MAIL_ENDPOINT     = 'mailto:?';
+      var SLACK_ENDPOINT    = '';
+      var TELEGRAM_ENDPOINT = 'https://t.me/share/url?';
+      var WHATSAPP_ENDPOINT = 'https://api.whatsapp.com/send?';
+    
+      // BOTONES
+      var boton_facebook = document.querySelector("#facebook-share");
+      var boton_linkedin = document.querySelector("#linkedin-share");
+      var boton_twitter  = document.querySelector("#twitter-share");
+      var boton_reddit   = document.querySelector("#reddit-share");
+      var boton_email    = document.querySelector("#email-share");
+      var boton_slack    = document.querySelector("#slack-share");
+      var boton_telegram = document.querySelector("#telegram-share");
+      var boton_whatsapp = document.querySelector("#whatsapp-share");
+
+      // CLASES
+      var in_mouse = "btn btn-outline-success";
+      var out_mouse_1 = "btn-outline-success";
+      var out_mouse_2 = "btn-link";
+
+      // FACEBOOK
+      boton_facebook.addEventListener('mouseover', ()=>{
+         boton_facebook.className = in_mouse;
+      });
+
+      boton_facebook.addEventListener('mouseout', ()=>{
+         boton_facebook.classList.remove(out_mouse_1);
+         boton_facebook.classList.add(out_mouse_2);
+      });
+
+      boton_facebook.addEventListener('click', ()=>{
+         window.open(FACEBOOK_ENDPOINT + window.location.href);
+      });
+
+      // LINKEDIN
+      boton_linkedin.addEventListener('mouseover', ()=>{
+         boton_linkedin.className = in_mouse;
+      });
+
+      boton_linkedin.addEventListener('mouseout', ()=>{
+         boton_linkedin.classList.remove(out_mouse_1);
+         boton_linkedin.classList.add(out_mouse_2);
+      });//%s%s
+      boton_linkedin.addEventListener('click', ()=>{
+         window.open(LINKEDIN_ENDPOINT + '&title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // TWITTER
+      boton_twitter.addEventListener('mouseover', ()=>{
+         boton_twitter.className = in_mouse;
+      });
+
+      boton_twitter.addEventListener('mouseout', ()=>{
+         boton_twitter.classList.remove(out_mouse_1);
+         boton_twitter.classList.add(out_mouse_2);
+      });
+      
+      boton_twitter.addEventListener('click', ()=>{
+         window.open(TWITTER_ENDPOINT + 'original_referer=' + 
+         window.location.href + '&text=' + 
+         document.querySelector("h5.card-title").innerHTML + '&tw_p=tweetbutton' 
+         + '&url=' + window.location.href);
+      });
+
+      // REDDIT
+      boton_reddit.addEventListener('mouseover', ()=>{
+         boton_reddit.className = in_mouse;
+      });
+
+      boton_reddit.addEventListener('mouseout', ()=>{
+         boton_reddit.classList.remove(out_mouse_1);
+         boton_reddit.classList.add(out_mouse_2);
+      });
+
+      boton_reddit.addEventListener('click', ()=>{
+         window.open(REDDIT_ENDPOINT + 'title=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // EMAIL
+      boton_email.addEventListener('mouseover', ()=>{
+         boton_email.className = in_mouse;
+      });
+
+      boton_email.addEventListener('mouseout', ()=>{
+         boton_email.classList.remove(out_mouse_1);
+         boton_email.classList.add(out_mouse_2);
+      });
+
+      boton_email.addEventListener('click', ()=>{
+         window.open(MAIL_ENDPOINT + 'subject=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&body=' + window.location.href);
+      });
+
+      // SLACK
+      boton_slack.addEventListener('mouseover', ()=>{
+         boton_slack.className = in_mouse;
+      });
+
+      boton_slack.addEventListener('mouseout', ()=>{
+         boton_slack.classList.remove(out_mouse_1);
+         boton_slack.classList.add(out_mouse_2);
+      });
+
+      // TELEGRAM
+      boton_telegram.addEventListener('mouseover', ()=>{
+         boton_telegram.className = in_mouse;
+      });
+
+      boton_telegram.addEventListener('mouseout', ()=>{
+         boton_telegram.classList.remove(out_mouse_1);
+         boton_telegram.classList.add(out_mouse_2);
+      });
+
+      boton_telegram.addEventListener('click', ()=>{
+         window.open(TELEGRAM_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + 
+         '&url=' + window.location.href);
+      });
+
+      // WHATSAPP
+      boton_whatsapp.addEventListener('mouseover', ()=>{
+         boton_whatsapp.className = in_mouse;
+      });
+
+      boton_whatsapp.addEventListener('mouseout', ()=>{
+         boton_whatsapp.classList.remove(out_mouse_1);
+         boton_whatsapp.classList.add(out_mouse_2);
+      });
+
+      boton_whatsapp.addEventListener('click', ()=>{
+         window.open(WHATSAPP_ENDPOINT + 'text=' + 
+         document.querySelector("h5.card-title").innerHTML + ' ' 
+         + window.location.href )
+      });
+
     </script>
 {% endblock %}
