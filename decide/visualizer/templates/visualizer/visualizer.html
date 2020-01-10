@@ -84,11 +84,10 @@
                           Simular espacio de color
                           </a>
                           <div id="dropDownColors" class="dropdown-menu card-shadow-3" aria-labelledby="dropdownMenuLink">
-                             <a id="dropDownColors1" class="dropdown-item active" href="#">Desactivado</a>
-                             <a id="dropDownColors2" class="dropdown-item" href="#">Monocromático</a>
-                             <a id="dropDownColors3" class="dropdown-item" href="#">Deuteranomalía (rojo-verde)</a>
-                             <a id="dropDownColors4" class="dropdown-item" href="#">Protanomalía (rojo-verde)</a>
-                             <a id="dropDownColors5" class="dropdown-item" href="#">Tritanomalía (azul-amarillo)</a>
+                             <a id="dropDownColors2" class="dropdown-item pointer" onclick="monocromatico()">Monocromático</a>
+                             <a id="dropDownColors3" class="dropdown-item pointer" onclick="deuteranomalia()">Deuteranomalía (rojo-verde)</a>
+                             <a id="dropDownColors4" class="dropdown-item pointer" onclick="protanomalia()">Protanomalía (rojo-verde)</a>
+                             <a id="dropDownColors5" class="dropdown-item pointer" onclick="tritranomalia()">Tritanomalía (azul-amarillo)</a>
                           </div>
                        </div> 
                     </li>
@@ -378,6 +377,7 @@
             let green = Math.floor(Math.random() * 256);
             let blue = Math.floor(Math.random() * 256);
             let rgb = "rgb(" + red + "," + green + "," + blue +")";
+          
             if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
             colors.push(PodemosPartido[podemosindice]);
             podemosindice++;
@@ -673,6 +673,242 @@
 
         window.onload = checkCookie();
     </script>
+<script>
+    function monocromatico(){
+        var coloresmonocromaticos = ["rgb(56,56,56)",
+    "rgb(101,101,101)",
+    "rgb(146,146,146)",
+    "rgb(188,188,188)",
+    "rgb(65,65,65)",
+    "rgb(110,110,110)",
+    "rgb(153,153,153)",
+    "rgb(197,197,197)",
+    "rgb(74,74,74)",
+    "rgb(119,119,119)",
+    "rgb(162,162,162)",
+    "rgb(206,206,206)",
+    "rgb(83,83,83)",
+    "rgb(128,128,128)",
+    "rgb(171,171,171)",
+    "rgb(215,215,215)",
+    "rgb(92,92,92)",
+    "rgb(137,137,137)",
+    "rgb(180,180,180)",
+    "rgb(224,224,224)"
+]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        for (let i = 0; i < postproc_length; i++) {
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            colorsNew.push(coloresmonocromaticos[i]);
+        }
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+    }
+
+    function deuteranomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(255,126,12)","rgb(255,167,89)","rgb(204,101,10)","rgb(224,111,11)","rgb(166,49,36)","rgb(176,87,9)","rgb(181,89,9)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+        function protanomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(41,128,186)","rgb(27,84,122)","rgb(21,65,94)","rgb(44,137,199)","rgb(30,95,138)","rgb(56,175,255)", "rgb(20,63,92)"]
+
+        var PSOEPartido = ["rgb(241,196,15)","rgb(163,133,10)","rgb(244,213,88)","rgb(115,100,41)","rgb(168,137,10)","rgb(255,207,15)","rgb(196,159,12)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+        function tritranomalia(){
+
+        var PodemosPartido = ["rgb(77,86,86)","rgb(95,106,106)","rgb(113,125,126)","rgb(131,145,146)","rgb(149,165,166)","rgb(98,101,103)", "rgb(121,125,127)"]
+
+        var PPPartido = ["rgb(48,255,12)","rgb(12,64,3)","rgb(114,255,89)","rgb(57,128,45)","rgb(35,181,9)","rgb(25,130,7)", "rgb(92,207,72)"]
+
+        var PSOEPartido = ["rgb(128,38,28)","rgb(99,30,22)","rgb(191,57,42)","rgb(204,61,45)","rgb(166,49,36)","rgb(255,76,56)","rgb(255,76,56)"]
+
+        let labels = [];
+        let datas = [];
+        let colorsNew = [];
+        let podemosindice = 0; 
+        let ppindice = 0;
+        let psoeindice = 0;
+        for (let i = 0; i < postproc_length; i++) {
+            let red = Math.floor(Math.random() * 256);
+            let green = Math.floor(Math.random() * 256);
+            let blue = Math.floor(Math.random() * 256);
+            let rgb = "rgb(" + red + "," + green + "," + blue +")";
+            labels.push(postproc[i].option);
+            datas.push(postproc[i].votes);
+            if(postproc[i].option.toUpperCase().startsWith('PODEMOS')){
+                colorsNew.push(PodemosPartido[podemosindice]);
+            podemosindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PP')){
+                colorsNew.push(PPPartido[ppindice]);
+                ppindice++;
+            }else if(postproc[i].option.toUpperCase().startsWith('PSOE')){
+                colorsNew.push(PSOEPartido[psoeindice]);
+                psoeindice++;
+            }else{
+                colors.push(rgb);
+            }
+        }
+
+        var canvas = document.getElementById("canvas");
+        var context = canvas.getContext('2d');
+
+        let graphType = 'pie';
+
+        let graph = new Chart(context, {
+            type: graphType,
+            data: {
+                labels: labels,
+                datasets: [{
+                    backgroundColor: colors,
+                    data: datas
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: question
+                }
+            }
+        });
+        colors=colorsNew;
+        }
+
+</script>
+
 
     <script>
 
