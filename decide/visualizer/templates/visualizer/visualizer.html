@@ -218,7 +218,7 @@
               <div id="exportDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">import_export</i> Exportar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="closeExport" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
@@ -240,7 +240,7 @@
               <div id="shareDiv" class="modal-content">
                  <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel"><i class="material-icons mr-1">share</i> Compartir</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="closeShare" type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                     </button>
                  </div>
@@ -495,6 +495,8 @@
             document.getElementById("dropDownColors3").className = "dropdown-item text-white";
             document.getElementById("dropDownColors4").className = "dropdown-item text-white";
             document.getElementById("dropDownColors5").className = "dropdown-item text-white";
+            document.getElementById("closeExport").className = "close text-white";
+            document.getElementById("closeShare").className = "close text-white";
             setCookie("theme", "dark", 365);
          }
 
@@ -520,6 +522,8 @@
             document.getElementById("dropDownColors3").className = "dropdown-item";
             document.getElementById("dropDownColors4").className = "dropdown-item";
             document.getElementById("dropDownColors5").className = "dropdown-item";
+            document.getElementById("closeExport").className = "close";
+            document.getElementById("closeShare").className = "close";
             setCookie("theme", "light", 365);
          }
 
