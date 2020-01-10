@@ -28,6 +28,12 @@ class CensusTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), 'Valid voter')
 
+    def test_check_votings_ids(self):
+        census = self.census
+        res = Census.check_save(self,census.voting_id)
+
+        self.assertTrue(not res)
+
     def test_list_voting(self):
         response = self.client.get('/census/?voting_id={}'.format(1), format='json')
         self.assertEqual(response.status_code, 401)
