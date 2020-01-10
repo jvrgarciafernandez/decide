@@ -1,8 +1,5 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
 from base import mods
 from base.models import Auth, Key
 
@@ -179,4 +176,4 @@ class Voting(models.Model):
             'Las siguientes candidaturas no cumplen con la relación 1/2'+
              'entre hombres y mujeres:\n' + str(df3.get_group(key)))
 
-
+        return df
