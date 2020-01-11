@@ -61,7 +61,7 @@ INSTALLED_APPS = [
 
 
 
-   # 'social_core.backends.facebook.FacebookOAuth2',
+    # 'social_core.backends.facebook.FacebookOAuth2',
     #################################################
 ]
 
