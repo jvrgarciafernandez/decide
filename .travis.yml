@@ -18,9 +18,25 @@ sudo: required
 
 services:
   - postgresql
+  - xvfb
+
+env:
+  - MOZ_HEADLESS=1
 
 addons:
   postgresql: "9.4"
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install dbus-x11
+  - export DISPLAY=:99.0
+  - export CHROME_BIN=/usr/bin/google-chrome
+  - sudo apt-get install -y libappindicator1 fonts-liberation
+  - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+  - sudo dpkg -i google-chrome*.deb
+  - wget https://chromedriver.storage.googleapis.com/2.38/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - sudo cp chromedriver /usr/bin
 
 before_script:
   - psql -U postgres -c "create user decide password 'decide'"
@@ -50,7 +66,7 @@ script:
 before_deploy:
   - git config --local user.name $USER_TRAVIS
   - git config --local user.email $EMAIL_TRAVIS
-  - export YEAR=`date +"%Y"`  
+  - export YEAR=`date +"%Y"`
   - export GIT_TAG=M$MILESTONE_TRAVIS-build.$TRAVIS_BUILD_NUMBER-$YEAR
   - git tag -a $GIT_TAG -m "Generated tag from TravisCI build $TRAVIS_BUILD_NUMBER"
 

@@ -30,6 +30,7 @@
 
             <!-- Register -->
             <b-form @submit="onSubmitLogin" v-if="signup">
+            <h2>{% trans "To vote it is necessary to identify again" %}</h2>
                 <b-form-group label="{% trans "Username" %}" label-for="username">
                     <b-form-input
                         id="username"
@@ -116,6 +117,7 @@
             },
             methods: {
                 init() {
+                    document.cookie = 'decide=;';
                     var cookies = document.cookie.split("; ");
                     cookies.forEach((c) => {
                         var cs = c.split("=");
