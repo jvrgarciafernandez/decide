@@ -1,9 +1,7 @@
 from django.contrib import admin
-from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Census
 from voting.models import Voting
-from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.http import HttpResponseRedirect
