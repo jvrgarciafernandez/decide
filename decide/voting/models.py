@@ -1,7 +1,9 @@
 from django.db import models
+from django.db.models import IntegerField
 from django.contrib.postgres.fields import JSONField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from base import mods
 from base.models import Auth, Key
@@ -32,6 +34,14 @@ class Voting(models.Model):
     name = models.CharField(max_length=200)
     desc = models.TextField(blank=True, null=True)
     question = models.ForeignKey(Question, related_name='voting', on_delete=models.CASCADE)
+    dhont = models.BooleanField(default=False)
+    numero_dhont = IntegerField(
+        default=1,
+        validators=[
+            MaxValueValidator(999),
+            MinValueValidator(1)
+        ]
+     )
 
     start_date = models.DateTimeField(blank=True, null=True)
     end_date = models.DateTimeField(blank=True, null=True)
@@ -100,6 +110,8 @@ class Voting(models.Model):
     def do_postproc(self):
         tally = self.tally
         options = self.question.options.all()
+        dhont = self.dhont
+        numero_dhont = self.numero_dhont
 
         opts = []
         for opt in options:
@@ -113,7 +125,7 @@ class Voting(models.Model):
                 'votes': votes
             })
 
-        data = { 'type': 'IDENTITY', 'options': opts }
+        data = { 'type': 'IDENTITY', 'options': opts, 'dhont':dhont, 'numero_dhont':numero_dhont }
         postp = mods.post('postproc', json=data)
 
         self.postproc = postp

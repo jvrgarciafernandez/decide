@@ -71,9 +71,9 @@ MODULES = [
     'voting',
 ]
 
-#BASEURL = 'http://localhost:8000'
+BASEURL = 'http://localhost:8000'
 #BASEURL = 'http://10.5.0.1:8000'
-BASEURL = 'https://decidedialgajvr.herokuapp.com'
+#BASEURL = 'https://decidedialgajvr.herokuapp.com'
 
 APIS = {
     'authentication': BASEURL,
