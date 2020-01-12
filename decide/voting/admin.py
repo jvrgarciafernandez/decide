@@ -46,7 +46,7 @@ def deleteAll(ModelAdmin, request, queryset):
 
 class QuestionOptionInline(admin.TabularInline):
     model = QuestionOption
-
+    fields = ['question', 'option']
 
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [QuestionOptionInline]

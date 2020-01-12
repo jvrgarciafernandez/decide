@@ -11,7 +11,7 @@
 
 {% block content %}
     <div id="app-booth">
-        <!-- Navbar -->
+        {% comment %} <!-- Navbar -->
         <b-navbar type="dark" variant="secondary">
             <b-navbar-brand tag="h1">Decide</b-navbar-brand>
                 <b-navbar-nav class="ml-auto" v-if="!signup">
@@ -19,7 +19,7 @@
                         {% trans "logout" %}
                     </b-nav-item>
                 </b-navbar-nav>
-        </b-navbar>
+        </b-navbar>  {% endcomment %}
 
         <b-alert :variant="alertLvl" dismissible v-model="alertShow">
             [[ alertMsg ]]
